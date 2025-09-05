@@ -5,3 +5,4 @@
 *.webm
 *_transcript.md
 .env
+.video_durations_cache.json

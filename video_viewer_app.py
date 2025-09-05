@@ -16,6 +16,7 @@ app = Flask(__name__)
 # Configuration
 VIDEO_DIR = "~/workspace/video_work/screen_recording"  # Update this path
 VIDEO_EXTENSIONS = {".mp4", ".avi", ".mov", ".mkv", ".webm"}
+DURATION_CACHE_FILE = ".video_durations_cache.json"
 
 
 def get_video_directory():
@@ -81,7 +82,7 @@ def parse_transcript(transcript_path):
         return None
 
 
-def get_video_info(video_path):
+def get_video_info(video_path, duration_cache):
     """Get video information including transcript data if available"""
     video_name = os.path.splitext(os.path.basename(video_path))[0]
     transcript_path = os.path.join(os.path.dirname(video_path), f"{video_name}_transcript.md")
@@ -92,7 +93,7 @@ def get_video_info(video_path):
         "path": video_path,
         "size": os.path.getsize(video_path),
         "modified_time": os.path.getmtime(video_path),
-        "duration": get_video_duration(video_path),
+        "duration": get_cached_duration(video_path, duration_cache),
         "has_transcript": os.path.exists(transcript_path),
     }
 
@@ -119,26 +120,78 @@ def get_all_videos():
     if not os.path.exists(video_dir):
         return videos
 
+    # Load duration cache
+    duration_cache = load_duration_cache()
+    original_cache_size = len(duration_cache)
+
     for filename in os.listdir(video_dir):
         if any(filename.lower().endswith(ext) for ext in VIDEO_EXTENSIONS):
             video_path = os.path.join(video_dir, filename)
-            video_info = get_video_info(video_path)
+            video_info = get_video_info(video_path, duration_cache)
             videos.append(video_info)
+
+    # Save cache if it was updated (new entries added or cache was empty)
+    if len(duration_cache) > original_cache_size or original_cache_size == 0:
+        save_duration_cache(duration_cache)
 
     # Sort by modification time (newest first)
     videos.sort(key=lambda x: x["modified_time"], reverse=True)
     return videos
 
 
+def load_duration_cache():
+    """Load video duration cache from JSON file"""
+    video_dir = get_video_directory()
+    cache_path = os.path.join(video_dir, DURATION_CACHE_FILE)
+    
+    try:
+        with open(cache_path, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
+def save_duration_cache(cache):
+    """Save video duration cache to JSON file"""
+    video_dir = get_video_directory()
+    cache_path = os.path.join(video_dir, DURATION_CACHE_FILE)
+    
+    try:
+        with open(cache_path, 'w') as f:
+            json.dump(cache, f, indent=2)
+    except Exception as e:
+        print(f"Error saving duration cache: {e}")
+
+
 def get_video_duration(video_path):
     """Get video duration in seconds using ffmpeg"""
     try:
         probe = ffmpeg.probe(video_path)
-        duration = float(probe['streams'][0]['duration'])
-        return duration
+        return float(probe['streams'][0]['duration'])
     except Exception as e:
         print(f"Error getting duration for {video_path}: {e}")
         return None
+
+
+def get_cached_duration(video_path, cache):
+    """Get video duration from cache or extract and cache it"""
+    filename = os.path.basename(video_path)
+    file_mtime = os.path.getmtime(video_path)
+    
+    # Check if we have cached data and if the file hasn't been modified
+    if filename in cache:
+        cached_data = cache[filename]
+        if cached_data.get('mtime') == file_mtime:
+            return cached_data.get('duration')
+    
+    # Extract duration and update cache
+    duration = get_video_duration(video_path)
+    cache[filename] = {
+        'duration': duration,
+        'mtime': file_mtime
+    }
+    
+    return duration
 
 
 def format_duration(seconds):
@@ -189,7 +242,13 @@ def video_player(filename):
     if not os.path.exists(video_path):
         return "Video not found", 404
 
-    video_info = get_video_info(video_path)
+    # Load duration cache for this single video
+    duration_cache = load_duration_cache()
+    video_info = get_video_info(video_path, duration_cache)
+    
+    # Save cache if it was updated
+    save_duration_cache(duration_cache)
+    
     return render_template("player.html", video=video_info)
 
 
