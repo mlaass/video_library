@@ -9,6 +9,7 @@ import re
 from pathlib import Path
 from flask import Flask, render_template, send_file, url_for, request
 import json
+import ffmpeg
 
 app = Flask(__name__)
 
@@ -90,6 +91,8 @@ def get_video_info(video_path):
         "name": video_name,
         "path": video_path,
         "size": os.path.getsize(video_path),
+        "modified_time": os.path.getmtime(video_path),
+        "duration": get_video_duration(video_path),
         "has_transcript": os.path.exists(transcript_path),
     }
 
@@ -122,9 +125,35 @@ def get_all_videos():
             video_info = get_video_info(video_path)
             videos.append(video_info)
 
-    # Sort by filename for consistency
-    videos.sort(key=lambda x: x["filename"])
+    # Sort by modification time (newest first)
+    videos.sort(key=lambda x: x["modified_time"], reverse=True)
     return videos
+
+
+def get_video_duration(video_path):
+    """Get video duration in seconds using ffmpeg"""
+    try:
+        probe = ffmpeg.probe(video_path)
+        duration = float(probe['streams'][0]['duration'])
+        return duration
+    except Exception as e:
+        print(f"Error getting duration for {video_path}: {e}")
+        return None
+
+
+def format_duration(seconds):
+    """Format duration in seconds to H:MM:SS or M:SS format"""
+    if seconds is None:
+        return "Unknown"
+    
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    secs = int(seconds % 60)
+    
+    if hours > 0:
+        return f"{hours}:{minutes:02d}:{secs:02d}"
+    else:
+        return f"{minutes}:{secs:02d}"
 
 
 def format_file_size(size_bytes):
@@ -147,6 +176,7 @@ def index():
     videos = get_all_videos()
     for video in videos:
         video["formatted_size"] = format_file_size(video["size"])
+        video["formatted_duration"] = format_duration(video["duration"])
     return render_template("index.html", videos=videos)
 
 

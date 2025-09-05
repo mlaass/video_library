@@ -120,6 +120,49 @@
             font-style: italic;
             padding: 40px;
         }
+        .search-container {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 40px 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+        .search-clear {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #666;
+            display: none;
+        }
+        .search-clear:hover {
+            color: #333;
+        }
+        .search-results {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .transcript-line.hidden {
+            display: none;
+        }
+        .highlight {
+            background-color: #ffeb3b;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -148,9 +191,15 @@
                 {% endif %}
                 
                 {% if video.transcript %}
-                    <div class="transcript-content">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search transcript..." autocomplete="off">
+                        <button id="searchClear" class="search-clear">×</button>
+                    </div>
+                    <div id="searchResults" class="search-results"></div>
+                    
+                    <div class="transcript-content" id="transcriptContent">
                         {% for line in video.transcript %}
-                        <div class="transcript-line" onclick="seekToTime({{ line.seconds }})">
+                        <div class="transcript-line" onclick="seekToTime({{ line.seconds }})" data-text="{{ line.text|lower }}">
                             <div class="timestamp">{{ line.timestamp }}</div>
                             <div class="transcript-text">{{ line.text }}</div>
                         </div>
@@ -172,29 +221,102 @@
             video.play();
         }
         
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchClear = document.getElementById('searchClear');
+        const searchResults = document.getElementById('searchResults');
+        const transcriptLines = document.querySelectorAll('.transcript-line');
+        
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
+            const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+        
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                // Show all lines and remove highlights
+                transcriptLines.forEach(line => {
+                    line.classList.remove('hidden');
+                    const textElement = line.querySelector('.transcript-text');
+                    textElement.innerHTML = textElement.textContent;
+                });
+                searchResults.textContent = '';
+                searchClear.style.display = 'none';
+                return;
+            }
+            
+            searchClear.style.display = 'block';
+            let matchCount = 0;
+            
+            transcriptLines.forEach(line => {
+                const text = line.getAttribute('data-text');
+                const textElement = line.querySelector('.transcript-text');
+                const originalText = textElement.textContent;
+                
+                if (text.includes(searchTerm)) {
+                    line.classList.remove('hidden');
+                    textElement.innerHTML = highlightText(originalText, searchTerm);
+                    matchCount++;
+                } else {
+                    line.classList.add('hidden');
+                    textElement.innerHTML = originalText;
+                }
+            });
+            
+            searchResults.textContent = matchCount > 0 
+                ? `Found ${matchCount} matching line${matchCount !== 1 ? 's' : ''}`
+                : 'No matches found';
+        }
+        
+        function clearSearch() {
+            searchInput.value = '';
+            performSearch();
+            searchInput.focus();
+        }
+        
+        // Event listeners for search
+        if (searchInput) {
+            searchInput.addEventListener('input', performSearch);
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    clearSearch();
+                }
+            });
+        }
+        
+        if (searchClear) {
+            searchClear.addEventListener('click', clearSearch);
+        }
+        
         // Highlight current transcript line based on video time
         const video = document.getElementById('mainVideo');
-        const transcriptLines = document.querySelectorAll('.transcript-line');
         
         video.addEventListener('timeupdate', function() {
             const currentTime = video.currentTime;
             
-            // Remove previous highlighting
+            // Remove previous highlighting (but preserve search highlights)
             transcriptLines.forEach(line => {
-                line.style.backgroundColor = '';
-                line.style.borderLeft = '';
+                if (!line.classList.contains('hidden')) {
+                    line.style.backgroundColor = '';
+                    line.style.borderLeft = '';
+                }
             });
             
             // Find and highlight current line
             for (let i = transcriptLines.length - 1; i >= 0; i--) {
                 const line = transcriptLines[i];
-                const timestamp = line.getAttribute('onclick');
-                if (timestamp) {
-                    const seconds = parseFloat(timestamp.match(/seekToTime\(([\d.]+)\)/)[1]);
-                    if (currentTime >= seconds) {
-                        line.style.backgroundColor = '#fff3cd';
-                        line.style.borderLeft = '4px solid #ffc107';
-                        break;
+                if (!line.classList.contains('hidden')) {
+                    const timestamp = line.getAttribute('onclick');
+                    if (timestamp) {
+                        const seconds = parseFloat(timestamp.match(/seekToTime\(([\d.]+)\)/)[1]);
+                        if (currentTime >= seconds) {
+                            line.style.backgroundColor = '#fff3cd';
+                            line.style.borderLeft = '4px solid #ffc107';
+                            break;
+                        }
                     }
                 }
             }
