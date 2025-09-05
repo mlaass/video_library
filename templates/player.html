@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ video.title or video.name }}</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .back-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .back-button:hover {
+            background: #5a6268;
+        }
+        .video-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+        @media (max-width: 1200px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        .video-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        video {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .transcript-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .transcript-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+        .summary {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        .summary-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1976D2;
+        }
+        .transcript-line {
+            display: flex;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .transcript-line:hover {
+            background-color: #f8f9fa;
+        }
+        .timestamp {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 12px;
+            color: #666;
+            margin-right: 12px;
+            min-width: 80px;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .transcript-text {
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #333;
+        }
+        .no-transcript {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="{{ url_for('index') }}" class="back-button">← Back to Library</a>
+            <h1 class="video-title">{{ video.title or video.name }}</h1>
+        </div>
+        
+        <div class="content">
+            <div class="video-section">
+                <video controls id="mainVideo">
+                    <source src="{{ url_for('serve_video', filename=video.filename) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            
+            <div class="transcript-section">
+                <div class="transcript-header">📝 Transcript</div>
+                
+                {% if video.summary %}
+                <div class="summary">
+                    <div class="summary-title">Summary</div>
+                    <div>{{ video.summary }}</div>
+                </div>
+                {% endif %}
+                
+                {% if video.transcript %}
+                    <div class="transcript-content">
+                        {% for line in video.transcript %}
+                        <div class="transcript-line" onclick="seekToTime({{ line.seconds }})">
+                            <div class="timestamp">{{ line.timestamp }}</div>
+                            <div class="transcript-text">{{ line.text }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-transcript">
+                        No transcript available for this video.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function seekToTime(seconds) {
+            const video = document.getElementById('mainVideo');
+            video.currentTime = seconds;
+            video.play();
+        }
+        
+        // Highlight current transcript line based on video time
+        const video = document.getElementById('mainVideo');
+        const transcriptLines = document.querySelectorAll('.transcript-line');
+        
+        video.addEventListener('timeupdate', function() {
+            const currentTime = video.currentTime;
+            
+            // Remove previous highlighting
+            transcriptLines.forEach(line => {
+                line.style.backgroundColor = '';
+                line.style.borderLeft = '';
+            });
+            
+            // Find and highlight current line
+            for (let i = transcriptLines.length - 1; i >= 0; i--) {
+                const line = transcriptLines[i];
+                const timestamp = line.getAttribute('onclick');
+                if (timestamp) {
+                    const seconds = parseFloat(timestamp.match(/seekToTime\(([\d.]+)\)/)[1]);
+                    if (currentTime >= seconds) {
+                        line.style.backgroundColor = '#fff3cd';
+                        line.style.borderLeft = '4px solid #ffc107';
+                        break;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
