@@ -8,6 +8,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 flask = "^3.1.2"
+ffmpeg-python = "^0.2.0"
+faster-whisper = "^1.2.0"
+soundfile = "^0.13.1"
 
 
 [build-system]
