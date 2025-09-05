@@ -4,3 +4,4 @@
 *.mov
 *.webm
 *_transcript.md
+.env
