@@ -16,7 +16,7 @@ app = Flask(__name__)
 # Configuration
 VIDEO_DIR = "~/workspace/video_work/screen_recording"  # Update this path
 VIDEO_EXTENSIONS = {".mp4", ".avi", ".mov", ".mkv", ".webm"}
-DURATION_CACHE_FILE = ".video_durations_cache.json"
+METADATA_CACHE_FILE = ".video_metadata_cache.json"
 
 
 def get_video_directory():
@@ -82,10 +82,13 @@ def parse_transcript(transcript_path):
         return None
 
 
-def get_video_info(video_path, duration_cache):
+def get_video_info(video_path, metadata_cache):
     """Get video information including transcript data if available"""
     video_name = os.path.splitext(os.path.basename(video_path))[0]
     transcript_path = os.path.join(os.path.dirname(video_path), f"{video_name}_transcript.md")
+
+    # Get duration and video date from cache
+    duration, video_date = get_cached_metadata(video_path, metadata_cache)
 
     info = {
         "filename": os.path.basename(video_path),
@@ -93,7 +96,8 @@ def get_video_info(video_path, duration_cache):
         "path": video_path,
         "size": os.path.getsize(video_path),
         "modified_time": os.path.getmtime(video_path),
-        "duration": get_cached_duration(video_path, duration_cache),
+        "video_date": video_date,
+        "duration": duration,
         "has_transcript": os.path.exists(transcript_path),
     }
 
@@ -120,29 +124,29 @@ def get_all_videos():
     if not os.path.exists(video_dir):
         return videos
 
-    # Load duration cache
-    duration_cache = load_duration_cache()
-    original_cache_size = len(duration_cache)
+    # Load metadata cache
+    metadata_cache = load_metadata_cache()
+    original_cache_size = len(metadata_cache)
 
     for filename in os.listdir(video_dir):
         if any(filename.lower().endswith(ext) for ext in VIDEO_EXTENSIONS):
             video_path = os.path.join(video_dir, filename)
-            video_info = get_video_info(video_path, duration_cache)
+            video_info = get_video_info(video_path, metadata_cache)
             videos.append(video_info)
 
     # Save cache if it was updated (new entries added or cache was empty)
-    if len(duration_cache) > original_cache_size or original_cache_size == 0:
-        save_duration_cache(duration_cache)
+    if len(metadata_cache) > original_cache_size or original_cache_size == 0:
+        save_metadata_cache(metadata_cache)
 
-    # Sort by modification time (newest first)
-    videos.sort(key=lambda x: x["modified_time"], reverse=True)
+    # Sort by video date (newest first) - use extracted date from filename or creation time
+    videos.sort(key=lambda x: x["video_date"], reverse=True)
     return videos
 
 
-def load_duration_cache():
-    """Load video duration cache from JSON file"""
+def load_metadata_cache():
+    """Load video metadata cache from JSON file"""
     video_dir = get_video_directory()
-    cache_path = os.path.join(video_dir, DURATION_CACHE_FILE)
+    cache_path = os.path.join(video_dir, METADATA_CACHE_FILE)
     
     try:
         with open(cache_path, 'r') as f:
@@ -151,16 +155,16 @@ def load_duration_cache():
         return {}
 
 
-def save_duration_cache(cache):
-    """Save video duration cache to JSON file"""
+def save_metadata_cache(cache):
+    """Save video metadata cache to JSON file"""
     video_dir = get_video_directory()
-    cache_path = os.path.join(video_dir, DURATION_CACHE_FILE)
+    cache_path = os.path.join(video_dir, METADATA_CACHE_FILE)
     
     try:
         with open(cache_path, 'w') as f:
             json.dump(cache, f, indent=2)
     except Exception as e:
-        print(f"Error saving duration cache: {e}")
+        print(f"Error saving metadata cache: {e}")
 
 
 def get_video_duration(video_path):
@@ -173,8 +177,8 @@ def get_video_duration(video_path):
         return None
 
 
-def get_cached_duration(video_path, cache):
-    """Get video duration from cache or extract and cache it"""
+def get_cached_metadata(video_path, cache):
+    """Get video metadata from cache or extract and cache it"""
     filename = os.path.basename(video_path)
     file_mtime = os.path.getmtime(video_path)
     
@@ -182,16 +186,31 @@ def get_cached_duration(video_path, cache):
     if filename in cache:
         cached_data = cache[filename]
         if cached_data.get('mtime') == file_mtime:
-            return cached_data.get('duration')
+            return cached_data.get('duration'), cached_data.get('video_date')
     
-    # Extract duration and update cache
+    # Extract duration and video date
     duration = get_video_duration(video_path)
+    
+    # Try to extract date from filename, fall back to file creation time
+    video_date = extract_date_from_filename(filename)
+    if video_date is None:
+        # Try to get file birth time (creation time) if available
+        try:
+            stat = os.stat(video_path)
+            # On Linux, try st_birthtime (not always available), fall back to st_ctime
+            video_date = getattr(stat, 'st_birthtime', stat.st_ctime)
+        except (AttributeError, OSError):
+            # Fall back to modification time
+            video_date = file_mtime
+    
+    # Update cache
     cache[filename] = {
         'duration': duration,
+        'video_date': video_date,
         'mtime': file_mtime
     }
     
-    return duration
+    return duration, video_date
 
 
 def format_duration(seconds):
@@ -207,6 +226,25 @@ def format_duration(seconds):
         return f"{hours}:{minutes:02d}:{secs:02d}"
     else:
         return f"{minutes}:{secs:02d}"
+
+
+def extract_date_from_filename(filename):
+    """Extract date from filename pattern YYYY-MM-DD_HH-MM-SS or fall back to file creation time"""
+    import datetime
+    
+    # Try to extract date from filename pattern like 2024-08-29_12-48-34.mp4
+    match = re.match(r'(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})', filename)
+    if match:
+        year, month, day, hour, minute, second = map(int, match.groups())
+        try:
+            dt = datetime.datetime(year, month, day, hour, minute, second)
+            return dt.timestamp()
+        except ValueError:
+            # Invalid date in filename, fall back to file stats
+            pass
+    
+    # Fall back to file creation/birth time if available, otherwise modification time
+    return None
 
 
 def format_file_size(size_bytes):
@@ -242,12 +280,12 @@ def video_player(filename):
     if not os.path.exists(video_path):
         return "Video not found", 404
 
-    # Load duration cache for this single video
-    duration_cache = load_duration_cache()
-    video_info = get_video_info(video_path, duration_cache)
+    # Load metadata cache for this single video
+    metadata_cache = load_metadata_cache()
+    video_info = get_video_info(video_path, metadata_cache)
     
     # Save cache if it was updated
-    save_duration_cache(duration_cache)
+    save_metadata_cache(metadata_cache)
     
     return render_template("player.html", video=video_info)
 
@@ -271,6 +309,17 @@ def truncate_text(text, length=100):
     if not text:
         return ""
     return text[:length] + "..." if len(text) > length else text
+
+
+@app.template_filter("timestamp_to_date")
+def timestamp_to_date(timestamp):
+    """Convert timestamp to readable date"""
+    import datetime
+    try:
+        dt = datetime.datetime.fromtimestamp(timestamp)
+        return dt.strftime("%Y-%m-%d %H:%M")
+    except (ValueError, TypeError):
+        return "Unknown"
 
 
 if __name__ == "__main__":

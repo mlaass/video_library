@@ -17,6 +17,31 @@
             margin-bottom: 30px;
             color: #333;
         }
+        .view-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .view-toggle {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        .view-toggle.active {
+            background: #3498db;
+        }
+        .view-toggle:hover {
+            background: #5a6268;
+        }
+        .view-toggle.active:hover {
+            background: #2980b9;
+        }
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -84,6 +109,95 @@
         .play-button:hover {
             background: #2980b9;
         }
+        
+        /* Table View Styles */
+        .table-view {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .table-view.active {
+            display: block;
+        }
+        .video-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .video-table th,
+        .video-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .video-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        .video-table th:hover {
+            background: #e9ecef;
+        }
+        .video-table th.sortable::after {
+            content: ' ↕️';
+            font-size: 12px;
+            opacity: 0.5;
+        }
+        .video-table th.sort-asc::after {
+            content: ' ↑';
+            opacity: 1;
+        }
+        .video-table th.sort-desc::after {
+            content: ' ↓';
+            opacity: 1;
+        }
+        .video-table tr:hover {
+            background: #f8f9fa;
+        }
+        .video-table .video-title-cell a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .video-table .video-title-cell a:hover {
+            color: #3498db;
+        }
+        .table-transcript-badge {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+        .table-transcript-badge.no-transcript {
+            background: #95a5a6;
+        }
+        .table-play-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+        }
+        .table-play-button:hover {
+            background: #2980b9;
+        }
+        .card-view.active {
+            display: grid;
+        }
+        .card-view {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -92,7 +206,17 @@
         <p>Found {{ videos|length }} videos</p>
     </div>
     
-    <div class="video-grid">
+    <div class="view-controls">
+        <button class="view-toggle active" id="cardViewBtn" onclick="switchView('card')">
+            🔲 Card View
+        </button>
+        <button class="view-toggle" id="tableViewBtn" onclick="switchView('table')">
+            📋 Table View
+        </button>
+    </div>
+    
+    <div class="card-view active" id="cardView">
+        <div class="video-grid">
         {% for video in videos %}
         <div class="video-card">
             <div class="video-title">
@@ -131,6 +255,154 @@
             <p>Make sure the VIDEO_DIR path is correct in the Python script.</p>
         </div>
         {% endif %}
+        </div>
     </div>
+    
+    <div class="table-view" id="tableView">
+        <table class="video-table">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="title">Title</th>
+                    <th class="sortable" data-column="filename">Filename</th>
+                    <th class="sortable" data-column="duration">Duration</th>
+                    <th class="sortable" data-column="size">Size</th>
+                    <th class="sortable" data-column="video_date">Created</th>
+                    <th class="sortable" data-column="has_transcript">Transcript</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for video in videos %}
+                <tr data-title="{{ video.title or video.name }}" 
+                    data-filename="{{ video.filename }}" 
+                    data-duration="{{ video.duration or 0 }}" 
+                    data-size="{{ video.size }}" 
+                    data-video_date="{{ video.video_date }}" 
+                    data-transcript="{{ video.has_transcript }}">
+                    <td class="video-title-cell">
+                        <a href="{{ url_for('video_player', filename=video.filename) }}">
+                            {{ video.title or video.name }}
+                        </a>
+                        {% if video.summary %}
+                        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                            {{ video.summary | truncate_text(80) }}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ video.filename }}</td>
+                    <td>{{ video.formatted_duration }}</td>
+                    <td>{{ video.formatted_size }}</td>
+                    <td>{{ video.video_date | int | timestamp_to_date }}</td>
+                    <td>
+                        {% if video.has_transcript %}
+                            <span class="table-transcript-badge">📝 Yes</span>
+                        {% else %}
+                            <span class="table-transcript-badge no-transcript">No</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('video_player', filename=video.filename) }}" class="table-play-button">
+                            ▶️ Play
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        let currentSort = { column: null, direction: 'asc' };
+        
+        function switchView(viewType) {
+            const cardView = document.getElementById('cardView');
+            const tableView = document.getElementById('tableView');
+            const cardBtn = document.getElementById('cardViewBtn');
+            const tableBtn = document.getElementById('tableViewBtn');
+            
+            if (viewType === 'card') {
+                cardView.classList.add('active');
+                tableView.classList.remove('active');
+                cardBtn.classList.add('active');
+                tableBtn.classList.remove('active');
+            } else {
+                cardView.classList.remove('active');
+                tableView.classList.add('active');
+                cardBtn.classList.remove('active');
+                tableBtn.classList.add('active');
+            }
+            
+            // Save preference to localStorage
+            localStorage.setItem('videoLibraryView', viewType);
+        }
+        
+        function sortTable(column) {
+            const table = document.querySelector('.video-table tbody');
+            const rows = Array.from(table.querySelectorAll('tr'));
+            const headers = document.querySelectorAll('.video-table th');
+            
+            // Determine sort direction
+            let direction = 'asc';
+            if (currentSort.column === column && currentSort.direction === 'asc') {
+                direction = 'desc';
+            }
+            
+            // Update header classes
+            headers.forEach(header => {
+                header.classList.remove('sort-asc', 'sort-desc');
+                if (header.dataset.column === column) {
+                    header.classList.add(direction === 'asc' ? 'sort-asc' : 'sort-desc');
+                }
+            });
+            
+            // Sort rows
+            rows.sort((a, b) => {
+                let aVal, bVal;
+                
+                // Handle different data types
+                if (column === 'modified_time') {
+                    // Use the raw timestamp for proper datetime sorting
+                    aVal = parseFloat(a.dataset.modified_time) || 0;
+                    bVal = parseFloat(b.dataset.modified_time) || 0;
+                } else if (column === 'duration' || column === 'size') {
+                    aVal = parseFloat(a.dataset[column]) || 0;
+                    bVal = parseFloat(b.dataset[column]) || 0;
+                } else if (column === 'has_transcript') {
+                    aVal = a.dataset[column] === 'True' ? 1 : 0;
+                    bVal = b.dataset[column] === 'True' ? 1 : 0;
+                } else {
+                    aVal = a.dataset[column].toLowerCase();
+                    bVal = b.dataset[column].toLowerCase();
+                }
+                
+                if (direction === 'asc') {
+                    return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+                } else {
+                    return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+                }
+            });
+            
+            // Reorder DOM
+            rows.forEach(row => table.appendChild(row));
+            
+            currentSort = { column, direction };
+        }
+        
+        // Add click listeners to sortable headers
+        document.addEventListener('DOMContentLoaded', function() {
+            const sortableHeaders = document.querySelectorAll('.video-table th.sortable');
+            sortableHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    sortTable(header.dataset.column);
+                });
+            });
+            
+            // Restore saved view preference
+            const savedView = localStorage.getItem('videoLibraryView');
+            if (savedView) {
+                switchView(savedView);
+            }
+        });
+    </script>
 </body>
 </html>
