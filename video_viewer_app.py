@@ -7,7 +7,7 @@ A simple web server to view videos with transcript integration
 import os
 import re
 from pathlib import Path
-from flask import Flask, render_template, send_file, url_for, request
+from flask import Flask, render_template, send_file, url_for, request, jsonify
 import json
 import ffmpeg
 
@@ -320,6 +320,48 @@ def timestamp_to_date(timestamp):
         return dt.strftime("%Y-%m-%d %H:%M")
     except (ValueError, TypeError):
         return "Unknown"
+
+
+@app.route("/transcript/<path:filename>", methods=["GET", "POST"])
+def transcript_editor(filename):
+    """Handle transcript editing - GET to load, POST to save"""
+    video_dir = get_video_directory()
+    video_name = os.path.splitext(filename)[0]
+    transcript_path = os.path.join(video_dir, f"{video_name}_transcript.md")
+    
+    if request.method == "GET":
+        # Load transcript content
+        if os.path.exists(transcript_path):
+            try:
+                with open(transcript_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                return content
+            except Exception as e:
+                return f"Error reading transcript: {str(e)}", 500
+        else:
+            # Return template for new transcript
+            return f"# {video_name}\n\n## Summary\n\n## Transcript\n\n[00:00:00] "
+    
+    elif request.method == "POST":
+        # Save transcript content
+        try:
+            data = request.get_json()
+            if not data or 'content' not in data:
+                return jsonify({"success": False, "error": "No content provided"})
+            
+            content = data['content']
+            
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(transcript_path), exist_ok=True)
+            
+            # Write the transcript file
+            with open(transcript_path, 'w', encoding='utf-8') as f:
+                f.write(content)
+            
+            return jsonify({"success": True, "message": "Transcript saved successfully"})
+            
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)})
 
 
 if __name__ == "__main__":

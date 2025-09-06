@@ -163,6 +163,93 @@
             background-color: #ffeb3b;
             font-weight: 600;
         }
+        .edit-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .edit-button:hover {
+            background: #218838;
+        }
+        .editor-container {
+            display: none;
+            margin-top: 15px;
+        }
+        .editor-container.active {
+            display: block;
+        }
+        .editor-instructions {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #495057;
+        }
+        .editor-instructions h4 {
+            margin: 0 0 10px 0;
+            color: #343a40;
+        }
+        .editor-instructions code {
+            background: #e9ecef;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+        .editor-textarea {
+            width: 100%;
+            height: 400px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 13px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            resize: vertical;
+            line-height: 1.4;
+        }
+        .editor-textarea:focus {
+            outline: none;
+            border-color: #28a745;
+        }
+        .editor-buttons {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .save-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .save-button:hover {
+            background: #218838;
+        }
+        .cancel-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .cancel-button:hover {
+            background: #5a6268;
+        }
+        .transcript-view {
+            display: block;
+        }
+        .transcript-view.hidden-for-edit {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -181,7 +268,12 @@
             </div>
             
             <div class="transcript-section">
-                <div class="transcript-header">📝 Transcript</div>
+                <div class="transcript-header">
+                    📝 Transcript
+                    {% if video.has_transcript %}
+                    <button class="edit-button" onclick="toggleEditor()">✏️ Edit</button>
+                    {% endif %}
+                </div>
                 
                 {% if video.summary %}
                 <div class="summary">
@@ -190,26 +282,55 @@
                 </div>
                 {% endif %}
                 
-                {% if video.transcript %}
-                    <div class="search-container">
-                        <input type="text" id="searchInput" class="search-input" placeholder="Search transcript..." autocomplete="off">
-                        <button id="searchClear" class="search-clear">×</button>
-                    </div>
-                    <div id="searchResults" class="search-results"></div>
-                    
-                    <div class="transcript-content" id="transcriptContent">
-                        {% for line in video.transcript %}
-                        <div class="transcript-line" onclick="seekToTime({{ line.seconds }})" data-text="{{ line.text|lower }}">
-                            <div class="timestamp">{{ line.timestamp }}</div>
-                            <div class="transcript-text">{{ line.text }}</div>
+                <div class="transcript-view" id="transcriptView">
+                    {% if video.transcript %}
+                        <div class="search-container">
+                            <input type="text" id="searchInput" class="search-input" placeholder="Search transcript..." autocomplete="off">
+                            <button id="searchClear" class="search-clear">×</button>
                         </div>
-                        {% endfor %}
+                        <div id="searchResults" class="search-results"></div>
+                        
+                        <div class="transcript-content" id="transcriptContent">
+                            {% for line in video.transcript %}
+                            <div class="transcript-line" onclick="seekToTime({{ line.seconds }})" data-text="{{ line.text|lower }}">
+                                <div class="timestamp">{{ line.timestamp }}</div>
+                                <div class="transcript-text">{{ line.text }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="no-transcript">
+                            No transcript available for this video.
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="editor-container" id="editorContainer">
+                    <div class="editor-instructions">
+                        <h4>📝 Transcript Format Instructions</h4>
+                        <p>The transcript file should follow this markdown format:</p>
+                        <ul>
+                            <li><code># Title</code> - Video title (optional)</li>
+                            <li><code>## Summary</code> - Brief summary (optional)</li>
+                            <li><code>## Transcript</code> - Section header</li>
+                            <li><code>[HH:MM:SS] Text content</code> - Timestamped lines</li>
+                        </ul>
+                        <p><strong>Example:</strong></p>
+                        <code># My Video Title<br>
+## Summary<br>
+This video covers important topics...<br><br>
+## Transcript<br>
+[00:00:05] Welcome to this presentation<br>
+[00:00:12] Today we'll discuss...</code>
                     </div>
-                {% else %}
-                    <div class="no-transcript">
-                        No transcript available for this video.
+                    
+                    <textarea id="transcriptEditor" class="editor-textarea" placeholder="Enter transcript content..."></textarea>
+                    
+                    <div class="editor-buttons">
+                        <button class="save-button" onclick="saveTranscript()">💾 Save Changes</button>
+                        <button class="cancel-button" onclick="cancelEdit()">❌ Cancel</button>
                     </div>
-                {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -318,6 +439,113 @@
                             break;
                         }
                     }
+                }
+            }
+        });
+        
+        // Editor functionality
+        let originalTranscriptContent = '';
+        
+        function toggleEditor() {
+            const transcriptView = document.getElementById('transcriptView');
+            const editorContainer = document.getElementById('editorContainer');
+            const transcriptEditor = document.getElementById('transcriptEditor');
+            
+            if (editorContainer.classList.contains('active')) {
+                // Already in edit mode, cancel
+                cancelEdit();
+            } else {
+                // Enter edit mode
+                transcriptView.classList.add('hidden-for-edit');
+                editorContainer.classList.add('active');
+                
+                // Load current transcript content
+                loadTranscriptContent();
+            }
+        }
+        
+        function loadTranscriptContent() {
+            const transcriptEditor = document.getElementById('transcriptEditor');
+            
+            // Make request to get raw transcript content
+            fetch(`/transcript/{{ video.filename }}`)
+                .then(response => response.text())
+                .then(content => {
+                    originalTranscriptContent = content;
+                    transcriptEditor.value = content;
+                    transcriptEditor.focus();
+                })
+                .catch(error => {
+                    console.error('Error loading transcript:', error);
+                    transcriptEditor.value = '# {{ video.title or video.name }}\n\n## Summary\n\n## Transcript\n\n[00:00:00] ';
+                    originalTranscriptContent = transcriptEditor.value;
+                });
+        }
+        
+        function saveTranscript() {
+            const transcriptEditor = document.getElementById('transcriptEditor');
+            const content = transcriptEditor.value;
+            
+            if (content.trim() === '') {
+                alert('Transcript content cannot be empty');
+                return;
+            }
+            
+            // Send update to server
+            fetch(`/transcript/{{ video.filename }}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content: content })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Transcript saved successfully! Refreshing page...');
+                    window.location.reload();
+                } else {
+                    alert('Error saving transcript: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error saving transcript:', error);
+                alert('Error saving transcript. Please try again.');
+            });
+        }
+        
+        function cancelEdit() {
+            const transcriptView = document.getElementById('transcriptView');
+            const editorContainer = document.getElementById('editorContainer');
+            const transcriptEditor = document.getElementById('transcriptEditor');
+            
+            // Check if there are unsaved changes
+            if (transcriptEditor.value !== originalTranscriptContent) {
+                if (!confirm('You have unsaved changes. Are you sure you want to cancel?')) {
+                    return;
+                }
+            }
+            
+            // Exit edit mode
+            transcriptView.classList.remove('hidden-for-edit');
+            editorContainer.classList.remove('active');
+            transcriptEditor.value = '';
+            originalTranscriptContent = '';
+        }
+        
+        // Add keyboard shortcuts for editor
+        document.addEventListener('keydown', function(e) {
+            const editorContainer = document.getElementById('editorContainer');
+            if (editorContainer.classList.contains('active')) {
+                // Ctrl+S to save
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    saveTranscript();
+                }
+                // Escape to cancel
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    cancelEdit();
                 }
             }
         });
