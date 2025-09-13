@@ -192,6 +192,65 @@
             font-size: 13px;
             color: #495057;
         }
+        .progress-text {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .progress-details {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #888;
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #007bff;
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+        
+        .status-details {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .ffmpeg-details {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .detail-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            color: #495057;
+            min-width: 60px;
+        }
+        
+        .detail-value {
+            color: #007bff;
+            font-weight: bold;
+            text-align: right;
+        }
         .editor-instructions h4 {
             margin: 0 0 10px 0;
             color: #343a40;
@@ -250,6 +309,175 @@
         .transcript-view.hidden-for-edit {
             display: none;
         }
+        .video-controls {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .controls-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .control-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        .control-group h4 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+        }
+        .control-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .control-input {
+            padding: 6px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 13px;
+            width: 80px;
+        }
+        .control-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .control-button:hover {
+            background: #0056b3;
+        }
+        .control-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .compress-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .compress-preset {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .compress-preset:hover {
+            background: #218838;
+        }
+        .status-container {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+            display: none;
+        }
+        .status-container.active {
+            display: block;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        .preview-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            display: none;
+        }
+        .preview-section.active {
+            display: block;
+        }
+        .preview-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .preview-button {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .preview-button:hover {
+            background: #e0a800;
+        }
+        .replace-button {
+            background: #28a745 !important;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .replace-button:hover {
+            background: #218838 !important;
+        }
+        .delete-section {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .delete-section h4 {
+            color: #e53e3e;
+            margin: 0 0 10px 0;
+        }
+        .delete-section p {
+            color: #666;
+            margin: 0 0 15px 0;
+            font-size: 14px;
+        }
+        .delete-video-button {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .delete-video-button:hover {
+            background: #c53030;
+        }
+        .delete-video-button:active {
+            background: #9c2626;
+        }
     </style>
 </head>
 <body>
@@ -265,6 +493,100 @@
                     <source src="{{ url_for('serve_video', filename=video.filename) }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+                
+                <div class="video-controls">
+                    <div class="controls-header">🎬 Video Processing</div>
+                    
+                    <!-- Trim Controls -->
+                    <div class="control-group">
+                        <h4>✂️ Trim Video</h4>
+                        <div class="control-row">
+                            <label>Start:</label>
+                            <input type="number" id="trimStart" class="control-input" placeholder="0" min="0" step="0.1">
+                            <label>End:</label>
+                            <input type="number" id="trimEnd" class="control-input" placeholder="60" min="0" step="0.1">
+                            <button class="control-button" onclick="setCurrentTime('start')">Use Current</button>
+                            <button class="control-button" onclick="trimVideo()">Trim</button>
+                        </div>
+                        <small>Times in seconds. Use "Use Current" to set the current video time.</small>
+                    </div>
+                    
+                    <!-- Compression Controls -->
+                    <div class="control-group">
+                        <h4>🗜️ Compress Video</h4>
+                        <div class="compress-options">
+                            <button class="compress-preset" onclick="compressVideo(50)">50% Size</button>
+                            <button class="compress-preset" onclick="compressVideo(25)">25% Size</button>
+                            <button class="compress-preset" onclick="compressVideo(10)">10% Size</button>
+                        </div>
+                        <div class="control-row" style="margin-top: 10px;">
+                            <label>Custom %:</label>
+                            <input type="number" id="customPercent" class="control-input" placeholder="30" min="10" max="90">
+                            <button class="control-button" onclick="compressVideoCustom()">Compress</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Display -->
+                    <div id="statusContainer" class="status-container">
+                        <div id="statusMessage" class="status-message"></div>
+                        <div id="statusText" class="status-text"></div>
+                        <div id="progressContainer" class="progress-container" style="display: none;">
+                            <div class="progress-bar">
+                                <div id="progressBar" class="progress-fill"></div>
+                                <div id="progressFill" class="progress-fill"></div>
+                            </div>
+                            <div id="progressText" class="progress-text">0%</div>
+                            <div id="progressDetails" class="progress-details"></div>
+                            <div id="statusDetails" class="status-details"></div>
+                            
+                            <!-- Detailed FFmpeg Progress Info -->
+                            <div id="ffmpegDetails" class="ffmpeg-details" style="display: none;">
+                                <div class="detail-row">
+                                    <span class="detail-label">Frame:</span>
+                                    <span id="frameInfo" class="detail-value">0 / 0</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Speed:</span>
+                                    <span id="speedInfo" class="detail-value">0x</span>
+                                    <span class="detail-label">FPS:</span>
+                                    <span id="fpsInfo" class="detail-value">0.0</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Bitrate:</span>
+                                    <span id="bitrateInfo" class="detail-value">N/A</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Size:</span>
+                                    <span id="sizeInfo" class="detail-value">Calculating...</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Ratio:</span>
+                                    <span id="ratioInfo" class="detail-value">Calculating...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Section -->
+                    <div id="previewSection" class="preview-section">
+                        <h4>📋 Preview Processed Video</h4>
+                        <p id="previewInfo">Processed video is ready for preview.</p>
+                        <div class="preview-controls">
+                            <button class="preview-button" onclick="previewProcessed()">👁️ Preview</button>
+                            <button class="preview-button replace-button" onclick="replaceOriginal()">🔄 Replace Original</button>
+                            <button class="preview-button" onclick="discardProcessed()">🗑️ Discard</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Delete Video Section -->
+                    <div class="delete-section">
+                        <h4>🗑️ Delete Video</h4>
+                        <p>Permanently delete this video and its transcript.</p>
+                        <button class="delete-video-button" onclick="deleteCurrentVideo()">
+                            🗑️ Delete Video & Transcript
+                        </button>
+                    </div>
+                </div>
             </div>
             
             <div class="transcript-section">
@@ -549,6 +871,407 @@ This video covers important topics...<br><br>
                 }
             }
         });
+        
+        // Video Processing Functions
+        let currentTaskId = null;
+        let processedFilename = null;
+        
+        function setCurrentTime(type) {
+            const video = document.getElementById('mainVideo');
+            const currentTime = Math.round(video.currentTime * 10) / 10;
+            
+            if (type === 'start') {
+                document.getElementById('trimStart').value = currentTime;
+            } else {
+                document.getElementById('trimEnd').value = currentTime;
+            }
+        }
+        
+        function trimVideo() {
+            const startTime = parseFloat(document.getElementById('trimStart').value) || 0;
+            const endTime = parseFloat(document.getElementById('trimEnd').value);
+            
+            if (!endTime || endTime <= startTime) {
+                alert('Please enter valid start and end times (end must be greater than start)');
+                return;
+            }
+            
+            const video = document.getElementById('mainVideo');
+            if (endTime > video.duration) {
+                alert('End time cannot be greater than video duration (' + Math.round(video.duration) + ' seconds)');
+                return;
+            }
+            
+            startProcessing('trim', {
+                video: '{{ video.filename }}',
+                start_time: startTime,
+                end_time: endTime
+            });
+        }
+        
+        function compressVideo(percentage) {
+            startProcessing('compress', {
+                video: '{{ video.filename }}',
+                target_percentage: percentage
+            });
+        }
+        
+        function compressVideoCustom() {
+            const percentage = parseInt(document.getElementById('customPercent').value);
+            
+            if (!percentage || percentage < 10 || percentage > 90) {
+                alert('Please enter a valid percentage between 10 and 90');
+                return;
+            }
+            
+            compressVideo(percentage);
+        }
+        
+        function startProcessing(operation, data) {
+            // Show status container
+            const statusContainer = document.getElementById('statusContainer');
+            const statusMessage = document.getElementById('statusMessage');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressDetails = document.getElementById('progressDetails');
+            
+            statusContainer.style.display = 'block';
+            statusMessage.textContent = `Starting ${operation}...`;
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+            progressDetails.style.display = 'none';
+            
+            // Disable all processing buttons
+            disableProcessingButtons(true);
+            
+            // Start the operation
+            fetch(`/api/${operation}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                
+                currentTaskId = result.task_id;
+                processedFilename = result.output_filename;
+                currentTaskType = operation;
+                
+                // Reset polling variables for new task
+                pollInterval = 3000;
+                consecutiveNoChange = 0;
+                lastProgress = -1;
+                
+                // Start polling for status
+                pollStatus();
+            })
+            .catch(error => {
+                console.error('Error starting processing:', error);
+                statusMessage.textContent = 'Error: ' + error.message;
+                disableProcessingButtons(false);
+            });
+        }
+        
+        let pollInterval = 3000; // Start with 3 seconds
+        let consecutiveNoChange = 0;
+        let lastProgress = -1;
+        
+        function pollStatus() {
+            if (!currentTaskId) return;
+            
+            fetch(`/api/status/${currentTaskId}`)
+                .then(response => response.json())
+                .then(status => {
+                    updateStatus(status);
+                    
+                    if (status.status === 'completed') {
+                        onProcessingComplete();
+                        return;
+                    } else if (status.status === 'error') {
+                        onProcessingError(status.message);
+                        return;
+                    }
+                    
+                    // Adaptive polling based on progress and status
+                    const currentProgress = status.progress || 0;
+                    
+                    if (currentProgress === lastProgress) {
+                        consecutiveNoChange++;
+                    } else {
+                        consecutiveNoChange = 0;
+                        lastProgress = currentProgress;
+                    }
+                    
+                    // Adjust polling interval based on activity
+                    if (status.status === 'queued' || status.status === 'analyzing') {
+                        pollInterval = 5000; // Slower for initial phases
+                    } else if (status.status === 'compressing') {
+                        if (consecutiveNoChange > 3) {
+                            pollInterval = Math.min(10000, pollInterval + 1000); // Slow down if no progress
+                        } else if (currentProgress > 0 && currentProgress < 90) {
+                            pollInterval = 3000; // Active compression
+                        } else {
+                            pollInterval = 2000; // Near completion, check more frequently
+                        }
+                    } else {
+                        pollInterval = 4000; // Default for other states
+                    }
+                    
+                    console.log(`[POLL] Progress: ${currentProgress}%, Interval: ${pollInterval}ms, No change: ${consecutiveNoChange}`);
+                    setTimeout(pollStatus, pollInterval);
+                })
+                .catch(error => {
+                    console.error('Error polling status:', error);
+                    // Increase interval on error to avoid spam
+                    pollInterval = Math.min(15000, pollInterval * 2);
+                    setTimeout(() => {
+                        if (currentTaskId) pollStatus();
+                    }, pollInterval);
+                });
+        }
+        
+        function updateStatus(status) {
+            const statusText = document.getElementById('statusText');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const statusDetails = document.getElementById('statusDetails');
+            const ffmpegDetails = document.getElementById('ffmpegDetails');
+            
+            statusText.textContent = status.status.replace('_', ' ').toUpperCase();
+            const progress = status.progress || 0;
+            progressFill.style.width = progress + '%';
+            progressText.textContent = progress + '%';
+            
+            if (status.message) {
+                statusDetails.textContent = status.message;
+            }
+            
+            // Show detailed FFmpeg info for compression tasks
+            if (status.status === 'compressing' && currentTaskId && currentTaskId.startsWith('compress_')) {
+                ffmpegDetails.style.display = 'block';
+                updateFFmpegDetails(status);
+            } else if (status.status === 'completed' && currentTaskId && currentTaskId.startsWith('compress_')) {
+                ffmpegDetails.style.display = 'block';
+                updateFFmpegCompletionDetails(status);
+            } else {
+                ffmpegDetails.style.display = 'none';
+            }
+        }
+        
+        function updateFFmpegDetails(status) {
+            // Update frame information
+            const frameInfo = document.getElementById('frameInfo');
+            if (status.current_frame && status.total_frames) {
+                frameInfo.textContent = `${status.current_frame.toLocaleString()} / ${status.total_frames.toLocaleString()}`;
+            }
+            
+            // Update speed information
+            const speedInfo = document.getElementById('speedInfo');
+            if (status.speed) {
+                speedInfo.textContent = status.speed;
+            }
+            
+            // Update FPS information
+            const fpsInfo = document.getElementById('fpsInfo');
+            if (status.fps) {
+                fpsInfo.textContent = status.fps.toFixed(1);
+            }
+            
+            // Update bitrate information
+            const bitrateInfo = document.getElementById('bitrateInfo');
+            if (status.bitrate) {
+                bitrateInfo.textContent = status.bitrate;
+            }
+            
+            // Update size and ratio (will be available on completion)
+            const sizeInfo = document.getElementById('sizeInfo');
+            const ratioInfo = document.getElementById('ratioInfo');
+            
+            if (status.input_size && status.output_size) {
+                sizeInfo.textContent = `${formatFileSize(status.input_size)} → ${formatFileSize(status.output_size)}`;
+                ratioInfo.textContent = `${status.compression_ratio.toFixed(1)}%`;
+            } else {
+                sizeInfo.textContent = 'Processing...';
+                ratioInfo.textContent = 'Calculating...';
+            }
+        }
+        
+        function updateFFmpegCompletionDetails(status) {
+            // Update final frame count
+            const frameInfo = document.getElementById('frameInfo');
+            if (status.current_frame && status.total_frames) {
+                frameInfo.textContent = `${status.current_frame.toLocaleString()} / ${status.total_frames.toLocaleString()} (Complete)`;
+            }
+            
+            // Clear dynamic values
+            document.getElementById('speedInfo').textContent = 'Complete';
+            document.getElementById('fpsInfo').textContent = 'Complete';
+            document.getElementById('bitrateInfo').textContent = 'Complete';
+            
+            // Show final size and compression ratio
+            const sizeInfo = document.getElementById('sizeInfo');
+            const ratioInfo = document.getElementById('ratioInfo');
+            
+            if (status.input_size && status.output_size) {
+                sizeInfo.textContent = `${formatFileSize(status.input_size)} → ${formatFileSize(status.output_size)}`;
+                ratioInfo.textContent = `${status.compression_ratio.toFixed(1)}%`;
+            }
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+        
+        function onProcessingComplete() {
+            const statusText = document.getElementById('statusText');
+            const statusDetails = document.getElementById('statusDetails');
+            const previewSection = document.getElementById('previewSection');
+            const previewInfo = document.getElementById('previewInfo');
+            const ffmpegDetails = document.getElementById('ffmpegDetails');
+            
+            statusText.textContent = 'COMPLETED';
+            statusDetails.textContent = 'Processing finished successfully!';
+            
+            // Keep FFmpeg details visible for compression tasks
+            if (currentTaskId && currentTaskId.startsWith('compress_')) {
+                ffmpegDetails.style.display = 'block';
+            }
+            
+            // Show preview section
+            previewSection.classList.add('active');
+            previewInfo.textContent = `Processed video saved as: ${processedFilename}`;
+            
+            // Re-enable buttons
+            disableProcessingButtons(false);
+        }
+        
+        function onProcessingError(message) {
+            const statusText = document.getElementById('statusText');
+            const statusDetails = document.getElementById('statusDetails');
+            
+            statusText.textContent = 'ERROR';
+            statusDetails.textContent = message || 'An error occurred during processing';
+            
+            // Re-enable buttons
+            disableProcessingButtons(false);
+            
+            // Clear task
+            currentTaskId = null;
+            processedFilename = null;
+        }
+        
+        function disableProcessingButtons(disabled) {
+            const buttons = document.querySelectorAll('.control-button, .compress-preset');
+            buttons.forEach(button => {
+                button.disabled = disabled;
+            });
+        }
+        
+        function previewProcessed() {
+            if (!processedFilename) {
+                alert('No processed video available');
+                return;
+            }
+            
+            // Open processed video in new tab
+            window.open(`/serve/${processedFilename}`, '_blank');
+        }
+        
+        function replaceOriginal() {
+            if (!processedFilename) {
+                alert('No processed video available');
+                return;
+            }
+            
+            if (!confirm('This will replace the original video with the processed version. The original will be backed up. Continue?')) {
+                return;
+            }
+            
+            fetch('/api/replace', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    original: '{{ video.filename }}',
+                    processed: processedFilename
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert(`Original video replaced successfully! Backup saved as: ${result.backup_filename}`);
+                    window.location.reload();
+                } else {
+                    alert('Error replacing video: ' + (result.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error replacing video:', error);
+                alert('Error replacing video. Please try again.');
+            });
+        }
+        
+        function discardProcessed() {
+            if (!processedFilename) {
+                alert('No processed video to discard');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to discard the processed video?')) {
+                // Hide preview section
+                document.getElementById('previewSection').classList.remove('active');
+                document.getElementById('statusContainer').classList.remove('active');
+                
+                // Clear variables
+                currentTaskId = null;
+                processedFilename = null;
+                
+                alert('Processed video discarded (file still exists on disk)');
+            }
+        }
+        
+        // Delete current video functionality
+        function deleteCurrentVideo() {
+            const filename = '{{ video.filename }}';
+            
+            if (!confirm(`Are you sure you want to delete "${filename}" and its transcript? This action cannot be undone.`)) {
+                return;
+            }
+
+            fetch('/api/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ filename: filename })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert(`Successfully deleted: ${result.deleted_files.join(', ')}`);
+                    // Redirect back to the main library
+                    window.location.href = '{{ url_for("index") }}';
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting video:', error);
+                alert('Error deleting video: ' + error.message);
+            });
+        }
     </script>
 </body>
 </html>

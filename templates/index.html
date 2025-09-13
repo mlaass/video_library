@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,17 +13,20 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
+
         .header {
             text-align: center;
             margin-bottom: 30px;
             color: #333;
         }
+
         .view-controls {
             display: flex;
             justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
         }
+
         .view-toggle {
             background: #6c757d;
             color: white;
@@ -33,55 +37,67 @@
             font-size: 14px;
             transition: background-color 0.2s;
         }
+
         .view-toggle.active {
             background: #3498db;
         }
+
         .view-toggle:hover {
             background: #5a6268;
         }
+
         .view-toggle.active:hover {
             background: #2980b9;
         }
+
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 20px;
         }
+
         .video-card {
             background: white;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s;
         }
+
         .video-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         }
+
         .video-title {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 10px;
             color: #2c3e50;
         }
+
         .video-title a {
             text-decoration: none;
             color: inherit;
         }
+
         .video-title a:hover {
             color: #3498db;
         }
+
         .video-meta {
             font-size: 12px;
             color: #666;
             margin-bottom: 10px;
         }
+
         .video-summary {
             font-size: 14px;
             color: #555;
             line-height: 1.4;
             margin-bottom: 15px;
         }
+
         .transcript-badge {
             display: inline-block;
             background: #27ae60;
@@ -91,9 +107,11 @@
             font-size: 11px;
             font-weight: 500;
         }
+
         .no-transcript {
             background: #95a5a6;
         }
+
         .play-button {
             background: #3498db;
             color: white;
@@ -106,31 +124,36 @@
             font-size: 14px;
             margin-top: 10px;
         }
+
         .play-button:hover {
             background: #2980b9;
         }
-        
+
         /* Table View Styles */
         .table-view {
             display: none;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
+
         .table-view.active {
             display: block;
         }
+
         .video-table {
             width: 100%;
             border-collapse: collapse;
         }
+
         .video-table th,
         .video-table td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #e9ecef;
         }
+
         .video-table th {
             background: #f8f9fa;
             font-weight: 600;
@@ -139,33 +162,41 @@
             user-select: none;
             position: relative;
         }
+
         .video-table th:hover {
             background: #e9ecef;
         }
+
         .video-table th.sortable::after {
             content: ' ↕️';
             font-size: 12px;
             opacity: 0.5;
         }
+
         .video-table th.sort-asc::after {
             content: ' ↑';
             opacity: 1;
         }
+
         .video-table th.sort-desc::after {
             content: ' ↓';
             opacity: 1;
         }
+
         .video-table tr:hover {
             background: #f8f9fa;
         }
+
         .video-table .video-title-cell a {
             text-decoration: none;
             color: #2c3e50;
             font-weight: 600;
         }
+
         .video-table .video-title-cell a:hover {
             color: #3498db;
         }
+
         .table-transcript-badge {
             display: inline-block;
             background: #27ae60;
@@ -175,9 +206,11 @@
             font-size: 10px;
             font-weight: 500;
         }
+
         .table-transcript-badge.no-transcript {
             background: #95a5a6;
         }
+
         .table-play-button {
             background: #3498db;
             color: white;
@@ -189,23 +222,156 @@
             display: inline-block;
             font-size: 12px;
         }
+
         .table-play-button:hover {
             background: #2980b9;
         }
+
         .card-view.active {
             display: grid;
         }
+
         .card-view {
             display: none;
         }
+        .bulk-controls {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .bulk-controls.active {
+            display: block;
+        }
+        .bulk-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .bulk-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .bulk-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .bulk-button:hover {
+            background: #218838;
+        }
+        .bulk-actions button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .delete-button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        .delete-button:hover {
+            background: #c82333;
+        }
+        
+        .delete-button:active {
+            background: #bd2130;
+        }
+        .bulk-button.transcribe {
+            background: #007bff;
+        }
+        .bulk-button.transcribe:hover {
+            background: #0056b3;
+        }
+        .bulk-button.summarize {
+            background: #ffc107;
+            color: #212529;
+        }
+        .bulk-button.summarize:hover {
+            background: #e0a800;
+        }
+        .bulk-button.delete {
+            background: #dc3545;
+            color: white;
+        }
+        .bulk-button.delete:hover {
+            background: #c82333;
+        }
+        .selection-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .video-checkbox {
+            margin-right: 10px;
+        }
+        .select-all-container {
+            margin-bottom: 15px;
+        }
+        .select-all-checkbox {
+            margin-right: 8px;
+        }
+        .status-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            display: none;
+        }
+        .status-panel.active {
+            display: block;
+        }
+        .task-status {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        .task-status.completed {
+            border-left-color: #28a745;
+        }
+        .task-status.error {
+            border-left-color: #dc3545;
+        }
+        .progress-bar-small {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .progress-fill-small {
+            height: 100%;
+            background: #007bff;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>📹 Video Library</h1>
         <p>Found {{ videos|length }} videos</p>
     </div>
-    
+
     <div class="view-controls">
         <button class="view-toggle active" id="cardViewBtn" onclick="switchView('card')">
             🔲 Card View
@@ -214,54 +380,93 @@
             📋 Table View
         </button>
     </div>
-    
-    <div class="card-view active" id="cardView">
-        <div class="video-grid">
-        {% for video in videos %}
-        <div class="video-card">
-            <div class="video-title">
-                <a href="{{ url_for('video_player', filename=video.filename) }}">
-                    {{ video.title or video.name }}
-                </a>
-            </div>
-            
-            <div class="video-meta">
-                📁 {{ video.filename }} • 💾 {{ video.formatted_size }} • ⏱️ {{ video.formatted_duration }}
-            </div>
-            
-            {% if video.summary %}
-            <div class="video-summary">
-                {{ video.summary | truncate_text(150) }}
-            </div>
-            {% endif %}
-            
-            <div>
-                {% if video.has_transcript %}
-                    <span class="transcript-badge">📝 Transcript Available</span>
-                {% else %}
-                    <span class="transcript-badge no-transcript">No Transcript</span>
-                {% endif %}
-                
-                <a href="{{ url_for('video_player', filename=video.filename) }}" class="play-button">
-                    ▶️ Play Video
-                </a>
-            </div>
-        </div>
-        {% endfor %}
+
+    <div class="bulk-controls" id="bulkControls">
+        <div class="bulk-header">🎬 Bulk Video Processing</div>
         
-        {% if not videos %}
-        <div style="text-align: center; grid-column: 1 / -1; padding: 60px 20px; color: #666;">
-            <h3>No videos found</h3>
-            <p>Make sure the VIDEO_DIR path is correct in the Python script.</p>
+        <div class="select-all-container">
+            <input type="checkbox" id="selectAll" class="select-all-checkbox" onchange="toggleSelectAll()">
+            <label for="selectAll">Select All Videos</label>
         </div>
-        {% endif %}
+        
+        <div class="selection-info" id="selectionInfo">
+            0 videos selected
+        </div>
+        
+        <div class="bulk-actions">
+            <button class="bulk-button transcribe" onclick="bulkTranscribe()" id="bulkTranscribeBtn" disabled>
+                🎤 Transcribe Selected
+            </button>
+            <button class="bulk-button summarize" onclick="bulkSummarize()" disabled>
+                📝 Summarize Selected
+            </button>
+            <button class="bulk-button delete" onclick="deleteSelectedVideos()" disabled>
+                🗑️ Delete Selected
+            </button>
+        </div>
+        
+        <div class="status-panel" id="statusPanel">
+            <h4>Processing Status</h4>
+            <div id="taskList"></div>
         </div>
     </div>
-    
+
+    <div class="card-view active" id="cardView">
+        <div class="video-grid">
+            {% for video in videos %}
+            <div class="video-card">
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <input type="checkbox" class="video-checkbox" data-filename="{{ video.filename }}" onchange="updateSelection()">
+                    <div class="video-title" style="margin-bottom: 0;">
+                        <a href="{{ url_for('video_player', filename=video.filename) }}">
+                            {{ video.title or video.name }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="video-meta">
+                    📁 {{ video.filename }} • 💾 {{ video.formatted_size }} • ⏱️ {{ video.formatted_duration }}
+                </div>
+
+                {% if video.summary %}
+                <div class="video-summary">
+                    {{ video.summary | truncate_text(150) }}
+                </div>
+                {% endif %}
+
+                <div>
+                    {% if video.has_transcript %}
+                    <span class="transcript-badge">📝 Transcript Available</span>
+                    {% else %}
+                    <span class="transcript-badge no-transcript">No Transcript</span>
+                    {% endif %}
+
+                    <a href="{{ url_for('video_player', filename=video.filename) }}" class="play-button">
+                        ▶️ Play Video
+                    </a>
+                    <button class="delete-button" onclick="deleteVideo('{{ video.filename }}')">
+                        🗑️ Delete
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if not videos %}
+            <div style="text-align: center; grid-column: 1 / -1; padding: 60px 20px; color: #666;">
+                <h3>No videos found</h3>
+                <p>Make sure the VIDEO_DIR path is correct in the Python script.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
     <div class="table-view" id="tableView">
         <table class="video-table">
             <thead>
                 <tr>
+                    <th style="width: 40px;">
+                        <input type="checkbox" id="selectAllTable" onchange="toggleSelectAllTable()">
+                    </th>
                     <th class="sortable" data-column="title">Title</th>
                     <th class="sortable" data-column="filename">Filename</th>
                     <th class="sortable" data-column="duration">Duration</th>
@@ -273,12 +478,12 @@
             </thead>
             <tbody>
                 {% for video in videos %}
-                <tr data-title="{{ video.title or video.name }}" 
-                    data-filename="{{ video.filename }}" 
-                    data-duration="{{ video.duration or 0 }}" 
-                    data-size="{{ video.size }}" 
-                    data-video_date="{{ video.video_date }}" 
-                    data-transcript="{{ video.has_transcript }}">
+                <tr data-title="{{ video.title or video.name }}" data-filename="{{ video.filename }}"
+                    data-duration="{{ video.duration or 0 }}" data-size="{{ video.size }}"
+                    data-video_date="{{ video.video_date }}" data-transcript="{{ video.has_transcript }}">
+                    <td>
+                        <input type="checkbox" class="video-checkbox" data-filename="{{ video.filename }}" onchange="updateSelection()">
+                    </td>
                     <td class="video-title-cell">
                         <a href="{{ url_for('video_player', filename=video.filename) }}">
                             {{ video.title or video.name }}
@@ -295,31 +500,34 @@
                     <td>{{ video.video_date | int | timestamp_to_date }}</td>
                     <td>
                         {% if video.has_transcript %}
-                            <span class="table-transcript-badge">📝 Yes</span>
+                        <span class="table-transcript-badge">📝 Yes</span>
                         {% else %}
-                            <span class="table-transcript-badge no-transcript">No</span>
+                        <span class="table-transcript-badge no-transcript">No</span>
                         {% endif %}
                     </td>
                     <td>
                         <a href="{{ url_for('video_player', filename=video.filename) }}" class="table-play-button">
                             ▶️ Play
                         </a>
+                        <button class="delete-button" onclick="deleteVideo('{{ video.filename }}')">
+                            🗑️ Delete
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    
+
     <script>
         let currentSort = { column: null, direction: 'asc' };
-        
+
         function switchView(viewType) {
             const cardView = document.getElementById('cardView');
             const tableView = document.getElementById('tableView');
             const cardBtn = document.getElementById('cardViewBtn');
             const tableBtn = document.getElementById('tableViewBtn');
-            
+
             if (viewType === 'card') {
                 cardView.classList.add('active');
                 tableView.classList.remove('active');
@@ -331,22 +539,22 @@
                 cardBtn.classList.remove('active');
                 tableBtn.classList.add('active');
             }
-            
+
             // Save preference to localStorage
             localStorage.setItem('videoLibraryView', viewType);
         }
-        
+
         function sortTable(column) {
             const table = document.querySelector('.video-table tbody');
             const rows = Array.from(table.querySelectorAll('tr'));
             const headers = document.querySelectorAll('.video-table th');
-            
+
             // Determine sort direction
             let direction = 'asc';
             if (currentSort.column === column && currentSort.direction === 'asc') {
                 direction = 'desc';
             }
-            
+
             // Update header classes
             headers.forEach(header => {
                 header.classList.remove('sort-asc', 'sort-desc');
@@ -354,11 +562,11 @@
                     header.classList.add(direction === 'asc' ? 'sort-asc' : 'sort-desc');
                 }
             });
-            
+
             // Sort rows
             rows.sort((a, b) => {
                 let aVal, bVal;
-                
+
                 // Handle different data types
                 if (column === 'modified_time') {
                     // Use the raw timestamp for proper datetime sorting
@@ -374,35 +582,369 @@
                     aVal = a.dataset[column].toLowerCase();
                     bVal = b.dataset[column].toLowerCase();
                 }
-                
+
                 if (direction === 'asc') {
                     return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
                 } else {
                     return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
                 }
             });
-            
+
             // Reorder DOM
             rows.forEach(row => table.appendChild(row));
-            
+
             currentSort = { column, direction };
         }
-        
+
         // Add click listeners to sortable headers
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const sortableHeaders = document.querySelectorAll('.video-table th.sortable');
             sortableHeaders.forEach(header => {
                 header.addEventListener('click', () => {
                     sortTable(header.dataset.column);
                 });
             });
-            
+
             // Restore saved view preference
             const savedView = localStorage.getItem('videoLibraryView');
             if (savedView) {
                 switchView(savedView);
             }
+            
+            // Show bulk controls if there are videos
+            const videoCount = document.querySelectorAll('.video-checkbox').length;
+            if (videoCount > 0) {
+                document.getElementById('bulkControls').classList.add('active');
+            }
         });
+        
+        // Bulk Processing Functions
+        let activeTasks = {};
+        
+        function updateSelection() {
+            const checkboxes = document.querySelectorAll('.video-checkbox');
+            const selectedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const totalCount = checkboxes.length;
+            
+            const selectionInfo = document.getElementById('selectionInfo');
+            selectionInfo.textContent = `${selectedCount} video${selectedCount !== 1 ? 's' : ''} selected`;
+            
+            // Enable/disable bulk buttons
+            const bulkButtons = document.querySelectorAll('.bulk-button');
+            bulkButtons.forEach(button => {
+                button.disabled = selectedCount === 0;
+            });
+            
+            // Get select all checkboxes
+            const selectAllCard = document.getElementById('selectAllCard');
+            const selectAllTable = document.getElementById('selectAllTable');
+            
+            // Update select all checkboxes
+            if (selectedCount === 0) {
+                if (selectAllCard) {
+                    selectAllCard.indeterminate = false;
+                    selectAllCard.checked = false;
+                }
+                if (selectAllTable) {
+                    selectAllTable.indeterminate = false;
+                    selectAllTable.checked = false;
+                }
+            } else if (selectedCount === totalCount) {
+                if (selectAllCard) {
+                    selectAllCard.indeterminate = false;
+                    selectAllCard.checked = true;
+                }
+                if (selectAllTable) {
+                    selectAllTable.indeterminate = false;
+                    selectAllTable.checked = true;
+                }
+            } else {
+                if (selectAllCard) {
+                    selectAllCard.indeterminate = true;
+                }
+                if (selectAllTable) {
+                    selectAllTable.indeterminate = true;
+                }
+            }
+            
+            // Enable/disable bulk action buttons (already handled above)
+        }
+        
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.video-checkbox');
+            const selectAllTable = document.getElementById('selectAllTable');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+            
+            selectAllTable.checked = selectAll.checked;
+            updateSelection();
+        }
+        
+        function toggleSelectAllTable() {
+            const selectAllTable = document.getElementById('selectAllTable');
+            const checkboxes = document.querySelectorAll('.video-checkbox');
+            const selectAll = document.getElementById('selectAll');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllTable.checked;
+            });
+            
+            selectAll.checked = selectAllTable.checked;
+            updateSelection();
+        }
+        
+        function getSelectedVideos() {
+            const selectedCheckboxes = document.querySelectorAll('.video-checkbox:checked');
+            return Array.from(selectedCheckboxes).map(cb => cb.dataset.filename);
+        }
+        
+        function bulkTranscribe() {
+            const selectedVideos = getSelectedVideos();
+            if (selectedVideos.length === 0) {
+                alert('Please select videos to transcribe');
+                return;
+            }
+            
+            if (!confirm(`Start transcription for ${selectedVideos.length} video${selectedVideos.length !== 1 ? 's' : ''}?`)) {
+                return;
+            }
+            
+            startBulkOperation('transcribe', selectedVideos);
+        }
+        
+        function bulkSummarize() {
+            const selectedVideos = getSelectedVideos();
+            if (selectedVideos.length === 0) {
+                alert('Please select videos to summarize');
+                return;
+            }
+            
+            if (!confirm(`Start summarization for ${selectedVideos.length} video${selectedVideos.length !== 1 ? 's' : ''}?`)) {
+                return;
+            }
+            
+            startBulkOperation('summarize', selectedVideos);
+        }
+        
+        function startBulkOperation(operation, videos) {
+            const statusPanel = document.getElementById('statusPanel');
+            const taskList = document.getElementById('taskList');
+            
+            statusPanel.classList.add('active');
+            
+            // Disable bulk buttons
+            const bulkButtons = document.querySelectorAll('.bulk-button');
+            bulkButtons.forEach(button => {
+                button.disabled = true;
+            });
+            
+            fetch(`/api/${operation}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ videos: videos, force: true })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.results) {
+                    data.results.forEach(result => {
+                        if (result.task_id) {
+                            activeTasks[result.task_id] = {
+                                video: result.video,
+                                operation: operation,
+                                element: createTaskElement(result.video, operation)
+                            };
+                            taskList.appendChild(activeTasks[result.task_id].element);
+                            
+                            // Start polling for this task
+                            pollTaskStatus(result.task_id);
+                        } else if (result.error) {
+                            const errorElement = createTaskElement(result.video, operation, result.error);
+                            taskList.appendChild(errorElement);
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error starting bulk operation:', error);
+                alert('Error starting bulk operation: ' + error.message);
+            })
+            .finally(() => {
+                // Re-enable buttons
+                updateSelection();
+            });
+        }
+        
+        function createTaskElement(videoName, operation, error = null) {
+            const div = document.createElement('div');
+            div.className = 'task-status';
+            
+            if (error) {
+                div.classList.add('error');
+                div.innerHTML = `
+                    <div><strong>${videoName}</strong> - ${operation.toUpperCase()}</div>
+                    <div style="color: #dc3545; font-size: 12px;">Error: ${error}</div>
+                `;
+            } else {
+                div.innerHTML = `
+                    <div><strong>${videoName}</strong> - ${operation.toUpperCase()}</div>
+                    <div class="status-text">Starting...</div>
+                    <div class="progress-bar-small">
+                        <div class="progress-fill-small"></div>
+                    </div>
+                `;
+            }
+            
+            return div;
+        }
+        
+        function pollTaskStatus(taskId) {
+            if (!activeTasks[taskId]) return;
+            
+            fetch(`/api/status/${taskId}`)
+                .then(response => response.json())
+                .then(status => {
+                    updateTaskStatus(taskId, status);
+                    
+                    if (status.status === 'completed') {
+                        onTaskComplete(taskId);
+                    } else if (status.status === 'error') {
+                        onTaskError(taskId, status.message);
+                    } else {
+                        // Continue polling
+                        setTimeout(() => pollTaskStatus(taskId), 3000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error polling task status:', error);
+                    onTaskError(taskId, 'Failed to get status');
+                });
+        }
+        
+        function updateTaskStatus(taskId, status) {
+            const task = activeTasks[taskId];
+            if (!task) return;
+            
+            const statusText = task.element.querySelector('.status-text');
+            const progressFill = task.element.querySelector('.progress-fill-small');
+            
+            if (statusText) {
+                statusText.textContent = status.status.replace('_', ' ').toUpperCase();
+            }
+            
+            if (progressFill) {
+                progressFill.style.width = (status.progress || 0) + '%';
+            }
+        }
+        
+        function onTaskComplete(taskId) {
+            const task = activeTasks[taskId];
+            if (!task) return;
+            
+            task.element.classList.add('completed');
+            const statusText = task.element.querySelector('.status-text');
+            if (statusText) {
+                statusText.textContent = 'COMPLETED';
+            }
+            
+            delete activeTasks[taskId];
+            
+            // Refresh page after a delay to show updated transcripts/summaries
+            setTimeout(() => {
+                if (Object.keys(activeTasks).length === 0) {
+                    if (confirm('All tasks completed! Refresh page to see updates?')) {
+                        window.location.reload();
+                    }
+                }
+            }, 2000);
+        }
+        
+        function onTaskError(taskId, message) {
+            const task = activeTasks[taskId];
+            if (!task) return;
+            
+            task.element.classList.add('error');
+            const statusText = task.element.querySelector('.status-text');
+            if (statusText) {
+                statusText.textContent = 'ERROR: ' + (message || 'Unknown error');
+            }
+            
+            delete activeTasks[taskId];
+        }
+
+        // Delete video functionality
+        function deleteVideo(filename) {
+            if (!confirm(`Are you sure you want to delete "${filename}" and its transcript? This action cannot be undone.`)) {
+                return;
+            }
+
+            fetch('/api/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ filename: filename })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert(`Successfully deleted: ${result.deleted_files.join(', ')}`);
+                    // Refresh the page to update the video list
+                    window.location.reload();
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting video:', error);
+                alert('Error deleting video: ' + error.message);
+            });
+        }
+
+        // Bulk delete functionality
+        function deleteSelectedVideos() {
+            const selectedVideos = getSelectedVideos();
+            
+            if (selectedVideos.length === 0) {
+                alert('Please select videos to delete.');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete ${selectedVideos.length} video(s) and their transcripts? This action cannot be undone.`)) {
+                return;
+            }
+
+            fetch('/api/delete_bulk', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ filenames: selectedVideos })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    let message = `Successfully deleted: ${result.deleted_files.join(', ')}`;
+                    if (result.errors.length > 0) {
+                        message += `\n\nErrors: ${result.errors.join(', ')}`;
+                    }
+                    alert(message);
+                    // Refresh the page to update the video list
+                    window.location.reload();
+                } else {
+                    alert(`Error: ${result.errors.join(', ')}`);
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting videos:', error);
+                alert('Error deleting videos: ' + error.message);
+            });
+        }
     </script>
 </body>
+
 </html>

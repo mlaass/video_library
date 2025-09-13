@@ -6,3 +6,5 @@
 *_transcript.md
 .env
 .video_durations_cache.json
+__pycache__
+*.pyc
