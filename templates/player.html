@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,13 +12,16 @@
             padding: 20px;
             background-color: #f8f9fa;
         }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
         }
+
         .header {
             margin-bottom: 20px;
         }
+
         .back-button {
             background: #6c757d;
             color: white;
@@ -28,43 +32,51 @@
             display: inline-block;
             margin-bottom: 15px;
         }
+
         .back-button:hover {
             background: #5a6268;
         }
+
         .video-title {
             font-size: 24px;
             font-weight: 700;
             color: #2c3e50;
             margin: 0;
         }
+
         .content {
             display: grid;
             grid-template-columns: 1fr 400px;
             gap: 30px;
         }
+
         @media (max-width: 1200px) {
             .content {
                 grid-template-columns: 1fr;
             }
         }
+
         .video-section {
             background: white;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         video {
             width: 100%;
             border-radius: 8px;
         }
+
         .transcript-section {
             background: white;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             max-height: 600px;
             overflow-y: auto;
         }
+
         .transcript-header {
             font-size: 18px;
             font-weight: 600;
@@ -73,6 +85,7 @@
             border-bottom: 2px solid #ecf0f1;
             padding-bottom: 10px;
         }
+
         .summary {
             background: #e3f2fd;
             border-left: 4px solid #2196F3;
@@ -80,11 +93,13 @@
             margin-bottom: 20px;
             border-radius: 0 8px 8px 0;
         }
+
         .summary-title {
             font-weight: 600;
             margin-bottom: 8px;
             color: #1976D2;
         }
+
         .transcript-line {
             display: flex;
             margin-bottom: 8px;
@@ -93,9 +108,11 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
+
         .transcript-line:hover {
             background-color: #f8f9fa;
         }
+
         .timestamp {
             font-family: 'Monaco', 'Consolas', monospace;
             font-size: 12px;
@@ -108,22 +125,26 @@
             display: flex;
             align-items: center;
         }
+
         .transcript-text {
             flex: 1;
             font-size: 14px;
             line-height: 1.4;
             color: #333;
         }
+
         .no-transcript {
             text-align: center;
             color: #666;
             font-style: italic;
             padding: 40px;
         }
+
         .search-container {
             margin-bottom: 15px;
             position: relative;
         }
+
         .search-input {
             width: 100%;
             padding: 10px 40px 10px 12px;
@@ -132,10 +153,12 @@
             font-size: 14px;
             transition: border-color 0.2s;
         }
+
         .search-input:focus {
             outline: none;
             border-color: #2196F3;
         }
+
         .search-clear {
             position: absolute;
             right: 10px;
@@ -148,21 +171,26 @@
             color: #666;
             display: none;
         }
+
         .search-clear:hover {
             color: #333;
         }
+
         .search-results {
             font-size: 12px;
             color: #666;
             margin-bottom: 10px;
         }
+
         .transcript-line.hidden {
             display: none;
         }
+
         .highlight {
             background-color: #ffeb3b;
             font-weight: 600;
         }
+
         .edit-button {
             background: #28a745;
             color: white;
@@ -173,16 +201,20 @@
             font-size: 12px;
             margin-left: 10px;
         }
+
         .edit-button:hover {
             background: #218838;
         }
+
         .editor-container {
             display: none;
             margin-top: 15px;
         }
+
         .editor-container.active {
             display: block;
         }
+
         .editor-instructions {
             background: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -192,12 +224,13 @@
             font-size: 13px;
             color: #495057;
         }
+
         .progress-text {
             margin-top: 5px;
             font-size: 14px;
             color: #666;
         }
-        
+
         .progress-details {
             margin-top: 8px;
             font-size: 12px;
@@ -210,13 +243,13 @@
             white-space: nowrap;
             overflow-x: auto;
         }
-        
+
         .status-details {
             font-size: 12px;
             color: #666;
             margin-top: 5px;
         }
-        
+
         .ffmpeg-details {
             background: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -226,7 +259,7 @@
             font-family: 'Courier New', monospace;
             font-size: 11px;
         }
-        
+
         .detail-row {
             display: flex;
             justify-content: space-between;
@@ -235,32 +268,35 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        
+
         .detail-row:last-child {
             margin-bottom: 0;
         }
-        
+
         .detail-label {
             font-weight: bold;
             color: #495057;
             min-width: 60px;
         }
-        
+
         .detail-value {
             color: #007bff;
             font-weight: bold;
             text-align: right;
         }
+
         .editor-instructions h4 {
             margin: 0 0 10px 0;
             color: #343a40;
         }
+
         .editor-instructions code {
             background: #e9ecef;
             padding: 2px 4px;
             border-radius: 3px;
             font-family: 'Monaco', 'Consolas', monospace;
         }
+
         .editor-textarea {
             width: 100%;
             height: 400px;
@@ -272,15 +308,18 @@
             resize: vertical;
             line-height: 1.4;
         }
+
         .editor-textarea:focus {
             outline: none;
             border-color: #28a745;
         }
+
         .editor-buttons {
             margin-top: 10px;
             display: flex;
             gap: 10px;
         }
+
         .save-button {
             background: #28a745;
             color: white;
@@ -289,9 +328,11 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .save-button:hover {
             background: #218838;
         }
+
         .cancel-button {
             background: #6c757d;
             color: white;
@@ -300,15 +341,19 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .cancel-button:hover {
             background: #5a6268;
         }
+
         .transcript-view {
             display: block;
         }
+
         .transcript-view.hidden-for-edit {
             display: none;
         }
+
         .video-controls {
             margin-top: 20px;
             padding: 20px;
@@ -316,12 +361,14 @@
             border-radius: 8px;
             border: 1px solid #dee2e6;
         }
+
         .controls-header {
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 15px;
             color: #2c3e50;
         }
+
         .control-group {
             margin-bottom: 20px;
             padding: 15px;
@@ -329,18 +376,21 @@
             border-radius: 6px;
             border: 1px solid #e9ecef;
         }
+
         .control-group h4 {
             margin: 0 0 10px 0;
             font-size: 14px;
             font-weight: 600;
             color: #495057;
         }
+
         .control-row {
             display: flex;
             gap: 10px;
             align-items: center;
             margin-bottom: 10px;
         }
+
         .control-input {
             padding: 6px 10px;
             border: 1px solid #ced4da;
@@ -348,6 +398,7 @@
             font-size: 13px;
             width: 80px;
         }
+
         .control-button {
             background: #007bff;
             color: white;
@@ -357,18 +408,22 @@
             cursor: pointer;
             font-size: 13px;
         }
+
         .control-button:hover {
             background: #0056b3;
         }
+
         .control-button:disabled {
             background: #6c757d;
             cursor: not-allowed;
         }
+
         .compress-options {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
+
         .compress-preset {
             background: #28a745;
             color: white;
@@ -378,9 +433,11 @@
             cursor: pointer;
             font-size: 12px;
         }
+
         .compress-preset:hover {
             background: #218838;
         }
+
         .status-container {
             margin-top: 15px;
             padding: 10px;
@@ -388,9 +445,11 @@
             border-radius: 4px;
             display: none;
         }
+
         .status-container.active {
             display: block;
         }
+
         .progress-bar {
             width: 100%;
             height: 20px;
@@ -399,12 +458,14 @@
             overflow: hidden;
             margin: 10px 0;
         }
+
         .progress-fill {
             height: 100%;
             background: #28a745;
             transition: width 0.3s ease;
             width: 0%;
         }
+
         .preview-section {
             margin-top: 20px;
             padding: 15px;
@@ -413,14 +474,17 @@
             border-radius: 6px;
             display: none;
         }
+
         .preview-section.active {
             display: block;
         }
+
         .preview-controls {
             display: flex;
             gap: 10px;
             margin-top: 10px;
         }
+
         .preview-button {
             background: #ffc107;
             color: #212529;
@@ -430,9 +494,11 @@
             cursor: pointer;
             font-size: 13px;
         }
+
         .preview-button:hover {
             background: #e0a800;
         }
+
         .replace-button {
             background: #28a745 !important;
             color: white;
@@ -442,9 +508,11 @@
             cursor: pointer;
             font-size: 13px;
         }
+
         .replace-button:hover {
             background: #218838 !important;
         }
+
         .delete-section {
             background: #fff5f5;
             border: 1px solid #fed7d7;
@@ -452,15 +520,18 @@
             padding: 20px;
             margin-top: 20px;
         }
+
         .delete-section h4 {
             color: #e53e3e;
             margin: 0 0 10px 0;
         }
+
         .delete-section p {
             color: #666;
             margin: 0 0 15px 0;
             font-size: 14px;
         }
+
         .delete-video-button {
             background: #e53e3e;
             color: white;
@@ -472,37 +543,41 @@
             font-weight: 500;
             transition: background-color 0.2s;
         }
+
         .delete-video-button:hover {
             background: #c53030;
         }
+
         .delete-video-button:active {
             background: #9c2626;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <a href="{{ url_for('index') }}" class="back-button">← Back to Library</a>
             <h1 class="video-title">{{ video.title or video.name }}</h1>
         </div>
-        
+
         <div class="content">
             <div class="video-section">
                 <video controls id="mainVideo">
                     <source src="{{ url_for('serve_video', filename=video.filename) }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-                
+
                 <div class="video-controls">
                     <div class="controls-header">🎬 Video Processing</div>
-                    
+
                     <!-- Trim Controls -->
                     <div class="control-group">
                         <h4>✂️ Trim Video</h4>
                         <div class="control-row">
                             <label>Start:</label>
-                            <input type="number" id="trimStart" class="control-input" placeholder="0" min="0" step="0.1">
+                            <input type="number" id="trimStart" class="control-input" placeholder="0" min="0"
+                                step="0.1">
                             <label>End:</label>
                             <input type="number" id="trimEnd" class="control-input" placeholder="60" min="0" step="0.1">
                             <button class="control-button" onclick="setCurrentTime('start')">Use Current</button>
@@ -510,7 +585,7 @@
                         </div>
                         <small>Times in seconds. Use "Use Current" to set the current video time.</small>
                     </div>
-                    
+
                     <!-- Compression Controls -->
                     <div class="control-group">
                         <h4>🗜️ Compress Video</h4>
@@ -521,11 +596,12 @@
                         </div>
                         <div class="control-row" style="margin-top: 10px;">
                             <label>Custom %:</label>
-                            <input type="number" id="customPercent" class="control-input" placeholder="30" min="10" max="90">
+                            <input type="number" id="customPercent" class="control-input" placeholder="30" min="10"
+                                max="90">
                             <button class="control-button" onclick="compressVideoCustom()">Compress</button>
                         </div>
                     </div>
-                    
+
                     <!-- Status Display -->
                     <div id="statusContainer" class="status-container">
                         <div id="statusMessage" class="status-message"></div>
@@ -538,7 +614,7 @@
                             <div id="progressText" class="progress-text">0%</div>
                             <div id="progressDetails" class="progress-details"></div>
                             <div id="statusDetails" class="status-details"></div>
-                            
+
                             <!-- Detailed FFmpeg Progress Info -->
                             <div id="ffmpegDetails" class="ffmpeg-details" style="display: none;">
                                 <div class="detail-row">
@@ -566,18 +642,19 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Preview Section -->
                     <div id="previewSection" class="preview-section">
                         <h4>📋 Preview Processed Video</h4>
                         <p id="previewInfo">Processed video is ready for preview.</p>
                         <div class="preview-controls">
                             <button class="preview-button" onclick="previewProcessed()">👁️ Preview</button>
-                            <button class="preview-button replace-button" onclick="replaceOriginal()">🔄 Replace Original</button>
+                            <button class="preview-button replace-button" onclick="replaceOriginal()">🔄 Replace
+                                Original</button>
                             <button class="preview-button" onclick="discardProcessed()">🗑️ Discard</button>
                         </div>
                     </div>
-                    
+
                     <!-- Delete Video Section -->
                     <div class="delete-section">
                         <h4>🗑️ Delete Video</h4>
@@ -588,7 +665,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="transcript-section">
                 <div class="transcript-header">
                     📝 Transcript
@@ -596,37 +673,39 @@
                     <button class="edit-button" onclick="toggleEditor()">✏️ Edit</button>
                     {% endif %}
                 </div>
-                
+
                 {% if video.summary %}
                 <div class="summary">
                     <div class="summary-title">Summary</div>
                     <div>{{ video.summary }}</div>
                 </div>
                 {% endif %}
-                
+
                 <div class="transcript-view" id="transcriptView">
                     {% if video.transcript %}
-                        <div class="search-container">
-                            <input type="text" id="searchInput" class="search-input" placeholder="Search transcript..." autocomplete="off">
-                            <button id="searchClear" class="search-clear">×</button>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search transcript..."
+                            autocomplete="off">
+                        <button id="searchClear" class="search-clear">×</button>
+                    </div>
+                    <div id="searchResults" class="search-results"></div>
+
+                    <div class="transcript-content" id="transcriptContent">
+                        {% for line in video.transcript %}
+                        <div class="transcript-line" onclick="seekToTime({{ line.seconds }})"
+                            data-text="{{ line.text|lower }}">
+                            <div class="timestamp">{{ line.timestamp }}</div>
+                            <div class="transcript-text">{{ line.text }}</div>
                         </div>
-                        <div id="searchResults" class="search-results"></div>
-                        
-                        <div class="transcript-content" id="transcriptContent">
-                            {% for line in video.transcript %}
-                            <div class="transcript-line" onclick="seekToTime({{ line.seconds }})" data-text="{{ line.text|lower }}">
-                                <div class="timestamp">{{ line.timestamp }}</div>
-                                <div class="transcript-text">{{ line.text }}</div>
-                            </div>
-                            {% endfor %}
-                        </div>
+                        {% endfor %}
+                    </div>
                     {% else %}
-                        <div class="no-transcript">
-                            No transcript available for this video.
-                        </div>
+                    <div class="no-transcript">
+                        No transcript available for this video.
+                    </div>
                     {% endif %}
                 </div>
-                
+
                 <div class="editor-container" id="editorContainer">
                     <div class="editor-instructions">
                         <h4>📝 Transcript Format Instructions</h4>
@@ -645,9 +724,10 @@ This video covers important topics...<br><br>
 [00:00:05] Welcome to this presentation<br>
 [00:00:12] Today we'll discuss...</code>
                     </div>
-                    
-                    <textarea id="transcriptEditor" class="editor-textarea" placeholder="Enter transcript content..."></textarea>
-                    
+
+                    <textarea id="transcriptEditor" class="editor-textarea"
+                        placeholder="Enter transcript content..."></textarea>
+
                     <div class="editor-buttons">
                         <button class="save-button" onclick="saveTranscript()">💾 Save Changes</button>
                         <button class="cancel-button" onclick="cancelEdit()">❌ Cancel</button>
@@ -656,29 +736,29 @@ This video covers important topics...<br><br>
             </div>
         </div>
     </div>
-    
+
     <script>
         function seekToTime(seconds) {
             const video = document.getElementById('mainVideo');
             video.currentTime = seconds;
             video.play();
         }
-        
+
         // Search functionality
         const searchInput = document.getElementById('searchInput');
         const searchClear = document.getElementById('searchClear');
         const searchResults = document.getElementById('searchResults');
         const transcriptLines = document.querySelectorAll('.transcript-line');
-        
+
         function highlightText(text, searchTerm) {
             if (!searchTerm) return text;
             const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
             return text.replace(regex, '<span class="highlight">$1</span>');
         }
-        
+
         function performSearch() {
             const searchTerm = searchInput.value.toLowerCase().trim();
-            
+
             if (searchTerm === '') {
                 // Show all lines and remove highlights
                 transcriptLines.forEach(line => {
@@ -690,15 +770,15 @@ This video covers important topics...<br><br>
                 searchClear.style.display = 'none';
                 return;
             }
-            
+
             searchClear.style.display = 'block';
             let matchCount = 0;
-            
+
             transcriptLines.forEach(line => {
                 const text = line.getAttribute('data-text');
                 const textElement = line.querySelector('.transcript-text');
                 const originalText = textElement.textContent;
-                
+
                 if (text.includes(searchTerm)) {
                     line.classList.remove('hidden');
                     textElement.innerHTML = highlightText(originalText, searchTerm);
@@ -708,38 +788,38 @@ This video covers important topics...<br><br>
                     textElement.innerHTML = originalText;
                 }
             });
-            
-            searchResults.textContent = matchCount > 0 
+
+            searchResults.textContent = matchCount > 0
                 ? `Found ${matchCount} matching line${matchCount !== 1 ? 's' : ''}`
                 : 'No matches found';
         }
-        
+
         function clearSearch() {
             searchInput.value = '';
             performSearch();
             searchInput.focus();
         }
-        
+
         // Event listeners for search
         if (searchInput) {
             searchInput.addEventListener('input', performSearch);
-            searchInput.addEventListener('keydown', function(e) {
+            searchInput.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape') {
                     clearSearch();
                 }
             });
         }
-        
+
         if (searchClear) {
             searchClear.addEventListener('click', clearSearch);
         }
-        
+
         // Highlight current transcript line based on video time
         const video = document.getElementById('mainVideo');
-        
-        video.addEventListener('timeupdate', function() {
+
+        video.addEventListener('timeupdate', function () {
             const currentTime = video.currentTime;
-            
+
             // Remove previous highlighting (but preserve search highlights)
             transcriptLines.forEach(line => {
                 if (!line.classList.contains('hidden')) {
@@ -747,7 +827,7 @@ This video covers important topics...<br><br>
                     line.style.borderLeft = '';
                 }
             });
-            
+
             // Find and highlight current line
             for (let i = transcriptLines.length - 1; i >= 0; i--) {
                 const line = transcriptLines[i];
@@ -764,15 +844,15 @@ This video covers important topics...<br><br>
                 }
             }
         });
-        
+
         // Editor functionality
         let originalTranscriptContent = '';
-        
+
         function toggleEditor() {
             const transcriptView = document.getElementById('transcriptView');
             const editorContainer = document.getElementById('editorContainer');
             const transcriptEditor = document.getElementById('transcriptEditor');
-            
+
             if (editorContainer.classList.contains('active')) {
                 // Already in edit mode, cancel
                 cancelEdit();
@@ -780,15 +860,15 @@ This video covers important topics...<br><br>
                 // Enter edit mode
                 transcriptView.classList.add('hidden-for-edit');
                 editorContainer.classList.add('active');
-                
+
                 // Load current transcript content
                 loadTranscriptContent();
             }
         }
-        
+
         function loadTranscriptContent() {
             const transcriptEditor = document.getElementById('transcriptEditor');
-            
+
             // Make request to get raw transcript content
             fetch(`/transcript/{{ video.filename }}`)
                 .then(response => response.text())
@@ -803,16 +883,16 @@ This video covers important topics...<br><br>
                     originalTranscriptContent = transcriptEditor.value;
                 });
         }
-        
+
         function saveTranscript() {
             const transcriptEditor = document.getElementById('transcriptEditor');
             const content = transcriptEditor.value;
-            
+
             if (content.trim() === '') {
                 alert('Transcript content cannot be empty');
                 return;
             }
-            
+
             // Send update to server
             fetch(`/transcript/{{ video.filename }}`, {
                 method: 'POST',
@@ -821,42 +901,42 @@ This video covers important topics...<br><br>
                 },
                 body: JSON.stringify({ content: content })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Transcript saved successfully! Refreshing page...');
-                    window.location.reload();
-                } else {
-                    alert('Error saving transcript: ' + (data.error || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Error saving transcript:', error);
-                alert('Error saving transcript. Please try again.');
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Transcript saved successfully! Refreshing page...');
+                        window.location.reload();
+                    } else {
+                        alert('Error saving transcript: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving transcript:', error);
+                    alert('Error saving transcript. Please try again.');
+                });
         }
-        
+
         function cancelEdit() {
             const transcriptView = document.getElementById('transcriptView');
             const editorContainer = document.getElementById('editorContainer');
             const transcriptEditor = document.getElementById('transcriptEditor');
-            
+
             // Check if there are unsaved changes
             if (transcriptEditor.value !== originalTranscriptContent) {
                 if (!confirm('You have unsaved changes. Are you sure you want to cancel?')) {
                     return;
                 }
             }
-            
+
             // Exit edit mode
             transcriptView.classList.remove('hidden-for-edit');
             editorContainer.classList.remove('active');
             transcriptEditor.value = '';
             originalTranscriptContent = '';
         }
-        
+
         // Add keyboard shortcuts for editor
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             const editorContainer = document.getElementById('editorContainer');
             if (editorContainer.classList.contains('active')) {
                 // Ctrl+S to save
@@ -871,62 +951,62 @@ This video covers important topics...<br><br>
                 }
             }
         });
-        
+
         // Video Processing Functions
         let currentTaskId = null;
         let processedFilename = null;
-        
+
         function setCurrentTime(type) {
             const video = document.getElementById('mainVideo');
             const currentTime = Math.round(video.currentTime * 10) / 10;
-            
+
             if (type === 'start') {
                 document.getElementById('trimStart').value = currentTime;
             } else {
                 document.getElementById('trimEnd').value = currentTime;
             }
         }
-        
+
         function trimVideo() {
             const startTime = parseFloat(document.getElementById('trimStart').value) || 0;
             const endTime = parseFloat(document.getElementById('trimEnd').value);
-            
+
             if (!endTime || endTime <= startTime) {
                 alert('Please enter valid start and end times (end must be greater than start)');
                 return;
             }
-            
+
             const video = document.getElementById('mainVideo');
             if (endTime > video.duration) {
                 alert('End time cannot be greater than video duration (' + Math.round(video.duration) + ' seconds)');
                 return;
             }
-            
+
             startProcessing('trim', {
                 video: '{{ video.filename }}',
                 start_time: startTime,
                 end_time: endTime
             });
         }
-        
+
         function compressVideo(percentage) {
             startProcessing('compress', {
                 video: '{{ video.filename }}',
                 target_percentage: percentage
             });
         }
-        
+
         function compressVideoCustom() {
             const percentage = parseInt(document.getElementById('customPercent').value);
-            
+
             if (!percentage || percentage < 10 || percentage > 90) {
                 alert('Please enter a valid percentage between 10 and 90');
                 return;
             }
-            
+
             compressVideo(percentage);
         }
-        
+
         function startProcessing(operation, data) {
             // Show status container
             const statusContainer = document.getElementById('statusContainer');
@@ -935,17 +1015,17 @@ This video covers important topics...<br><br>
             const progressBar = document.getElementById('progressBar');
             const progressText = document.getElementById('progressText');
             const progressDetails = document.getElementById('progressDetails');
-            
+
             statusContainer.style.display = 'block';
             statusMessage.textContent = `Starting ${operation}...`;
             progressContainer.style.display = 'block';
             progressBar.style.width = '0%';
             progressText.textContent = '0%';
             progressDetails.style.display = 'none';
-            
+
             // Disable all processing buttons
             disableProcessingButtons(true);
-            
+
             // Start the operation
             fetch(`/api/${operation}`, {
                 method: 'POST',
@@ -954,43 +1034,43 @@ This video covers important topics...<br><br>
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
-            .then(result => {
-                if (result.error) {
-                    throw new Error(result.error);
-                }
-                
-                currentTaskId = result.task_id;
-                processedFilename = result.output_filename;
-                currentTaskType = operation;
-                
-                // Reset polling variables for new task
-                pollInterval = 3000;
-                consecutiveNoChange = 0;
-                lastProgress = -1;
-                
-                // Start polling for status
-                pollStatus();
-            })
-            .catch(error => {
-                console.error('Error starting processing:', error);
-                statusMessage.textContent = 'Error: ' + error.message;
-                disableProcessingButtons(false);
-            });
+                .then(response => response.json())
+                .then(result => {
+                    if (result.error) {
+                        throw new Error(result.error);
+                    }
+
+                    currentTaskId = result.task_id;
+                    processedFilename = result.output_filename;
+                    currentTaskType = operation;
+
+                    // Reset polling variables for new task
+                    pollInterval = 3000;
+                    consecutiveNoChange = 0;
+                    lastProgress = -1;
+
+                    // Start polling for status
+                    pollStatus();
+                })
+                .catch(error => {
+                    console.error('Error starting processing:', error);
+                    statusMessage.textContent = 'Error: ' + error.message;
+                    disableProcessingButtons(false);
+                });
         }
-        
+
         let pollInterval = 3000; // Start with 3 seconds
         let consecutiveNoChange = 0;
         let lastProgress = -1;
-        
+
         function pollStatus() {
             if (!currentTaskId) return;
-            
+
             fetch(`/api/status/${currentTaskId}`)
                 .then(response => response.json())
                 .then(status => {
                     updateStatus(status);
-                    
+
                     if (status.status === 'completed') {
                         onProcessingComplete();
                         return;
@@ -998,17 +1078,17 @@ This video covers important topics...<br><br>
                         onProcessingError(status.message);
                         return;
                     }
-                    
+
                     // Adaptive polling based on progress and status
                     const currentProgress = status.progress || 0;
-                    
+
                     if (currentProgress === lastProgress) {
                         consecutiveNoChange++;
                     } else {
                         consecutiveNoChange = 0;
                         lastProgress = currentProgress;
                     }
-                    
+
                     // Adjust polling interval based on activity
                     if (status.status === 'queued' || status.status === 'analyzing') {
                         pollInterval = 5000; // Slower for initial phases
@@ -1023,7 +1103,7 @@ This video covers important topics...<br><br>
                     } else {
                         pollInterval = 4000; // Default for other states
                     }
-                    
+
                     console.log(`[POLL] Progress: ${currentProgress}%, Interval: ${pollInterval}ms, No change: ${consecutiveNoChange}`);
                     setTimeout(pollStatus, pollInterval);
                 })
@@ -1036,23 +1116,23 @@ This video covers important topics...<br><br>
                     }, pollInterval);
                 });
         }
-        
+
         function updateStatus(status) {
             const statusText = document.getElementById('statusText');
             const progressFill = document.getElementById('progressFill');
             const progressText = document.getElementById('progressText');
             const statusDetails = document.getElementById('statusDetails');
             const ffmpegDetails = document.getElementById('ffmpegDetails');
-            
+
             statusText.textContent = status.status.replace('_', ' ').toUpperCase();
             const progress = status.progress || 0;
             progressFill.style.width = progress + '%';
             progressText.textContent = progress + '%';
-            
+
             if (status.message) {
                 statusDetails.textContent = status.message;
             }
-            
+
             // Show detailed FFmpeg info for compression tasks
             if (status.status === 'compressing' && currentTaskId && currentTaskId.startsWith('compress_')) {
                 ffmpegDetails.style.display = 'block';
@@ -1064,36 +1144,36 @@ This video covers important topics...<br><br>
                 ffmpegDetails.style.display = 'none';
             }
         }
-        
+
         function updateFFmpegDetails(status) {
             // Update frame information
             const frameInfo = document.getElementById('frameInfo');
             if (status.current_frame && status.total_frames) {
                 frameInfo.textContent = `${status.current_frame.toLocaleString()} / ${status.total_frames.toLocaleString()}`;
             }
-            
+
             // Update speed information
             const speedInfo = document.getElementById('speedInfo');
             if (status.speed) {
                 speedInfo.textContent = status.speed;
             }
-            
+
             // Update FPS information
             const fpsInfo = document.getElementById('fpsInfo');
             if (status.fps) {
                 fpsInfo.textContent = status.fps.toFixed(1);
             }
-            
+
             // Update bitrate information
             const bitrateInfo = document.getElementById('bitrateInfo');
             if (status.bitrate) {
                 bitrateInfo.textContent = status.bitrate;
             }
-            
+
             // Update size and ratio (will be available on completion)
             const sizeInfo = document.getElementById('sizeInfo');
             const ratioInfo = document.getElementById('ratioInfo');
-            
+
             if (status.input_size && status.output_size) {
                 sizeInfo.textContent = `${formatFileSize(status.input_size)} → ${formatFileSize(status.output_size)}`;
                 ratioInfo.textContent = `${status.compression_ratio.toFixed(1)}%`;
@@ -1102,29 +1182,29 @@ This video covers important topics...<br><br>
                 ratioInfo.textContent = 'Calculating...';
             }
         }
-        
+
         function updateFFmpegCompletionDetails(status) {
             // Update final frame count
             const frameInfo = document.getElementById('frameInfo');
             if (status.current_frame && status.total_frames) {
                 frameInfo.textContent = `${status.current_frame.toLocaleString()} / ${status.total_frames.toLocaleString()} (Complete)`;
             }
-            
+
             // Clear dynamic values
             document.getElementById('speedInfo').textContent = 'Complete';
             document.getElementById('fpsInfo').textContent = 'Complete';
             document.getElementById('bitrateInfo').textContent = 'Complete';
-            
+
             // Show final size and compression ratio
             const sizeInfo = document.getElementById('sizeInfo');
             const ratioInfo = document.getElementById('ratioInfo');
-            
+
             if (status.input_size && status.output_size) {
                 sizeInfo.textContent = `${formatFileSize(status.input_size)} → ${formatFileSize(status.output_size)}`;
                 ratioInfo.textContent = `${status.compression_ratio.toFixed(1)}%`;
             }
         }
-        
+
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 B';
             const k = 1024;
@@ -1132,72 +1212,72 @@ This video covers important topics...<br><br>
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
         }
-        
+
         function onProcessingComplete() {
             const statusText = document.getElementById('statusText');
             const statusDetails = document.getElementById('statusDetails');
             const previewSection = document.getElementById('previewSection');
             const previewInfo = document.getElementById('previewInfo');
             const ffmpegDetails = document.getElementById('ffmpegDetails');
-            
+
             statusText.textContent = 'COMPLETED';
             statusDetails.textContent = 'Processing finished successfully!';
-            
+
             // Keep FFmpeg details visible for compression tasks
             if (currentTaskId && currentTaskId.startsWith('compress_')) {
                 ffmpegDetails.style.display = 'block';
             }
-            
+
             // Show preview section
             previewSection.classList.add('active');
             previewInfo.textContent = `Processed video saved as: ${processedFilename}`;
-            
+
             // Re-enable buttons
             disableProcessingButtons(false);
         }
-        
+
         function onProcessingError(message) {
             const statusText = document.getElementById('statusText');
             const statusDetails = document.getElementById('statusDetails');
-            
+
             statusText.textContent = 'ERROR';
             statusDetails.textContent = message || 'An error occurred during processing';
-            
+
             // Re-enable buttons
             disableProcessingButtons(false);
-            
+
             // Clear task
             currentTaskId = null;
             processedFilename = null;
         }
-        
+
         function disableProcessingButtons(disabled) {
             const buttons = document.querySelectorAll('.control-button, .compress-preset');
             buttons.forEach(button => {
                 button.disabled = disabled;
             });
         }
-        
+
         function previewProcessed() {
             if (!processedFilename) {
                 alert('No processed video available');
                 return;
             }
-            
+
             // Open processed video in new tab
             window.open(`/serve/${processedFilename}`, '_blank');
         }
-        
+
         function replaceOriginal() {
             if (!processedFilename) {
                 alert('No processed video available');
                 return;
             }
-            
+
             if (!confirm('This will replace the original video with the processed version. The original will be backed up. Continue?')) {
                 return;
             }
-            
+
             fetch('/api/replace', {
                 method: 'POST',
                 headers: {
@@ -1208,44 +1288,44 @@ This video covers important topics...<br><br>
                     processed: processedFilename
                 })
             })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    alert(`Original video replaced successfully! Backup saved as: ${result.backup_filename}`);
-                    window.location.reload();
-                } else {
-                    alert('Error replacing video: ' + (result.error || 'Unknown error'));
-                }
-            })
-            .catch(error => {
-                console.error('Error replacing video:', error);
-                alert('Error replacing video. Please try again.');
-            });
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert(`Original video replaced successfully! Backup saved as: ${result.backup_filename}`);
+                        window.location.reload();
+                    } else {
+                        alert('Error replacing video: ' + (result.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error replacing video:', error);
+                    alert('Error replacing video. Please try again.');
+                });
         }
-        
+
         function discardProcessed() {
             if (!processedFilename) {
                 alert('No processed video to discard');
                 return;
             }
-            
+
             if (confirm('Are you sure you want to discard the processed video?')) {
                 // Hide preview section
                 document.getElementById('previewSection').classList.remove('active');
                 document.getElementById('statusContainer').classList.remove('active');
-                
+
                 // Clear variables
                 currentTaskId = null;
                 processedFilename = null;
-                
+
                 alert('Processed video discarded (file still exists on disk)');
             }
         }
-        
+
         // Delete current video functionality
         function deleteCurrentVideo() {
             const filename = '{{ video.filename }}';
-            
+
             if (!confirm(`Are you sure you want to delete "${filename}" and its transcript? This action cannot be undone.`)) {
                 return;
             }
@@ -1257,21 +1337,22 @@ This video covers important topics...<br><br>
                 },
                 body: JSON.stringify({ filename: filename })
             })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    alert(`Successfully deleted: ${result.deleted_files.join(', ')}`);
-                    // Redirect back to the main library
-                    window.location.href = '{{ url_for("index") }}';
-                } else {
-                    alert(`Error: ${result.error}`);
-                }
-            })
-            .catch(error => {
-                console.error('Error deleting video:', error);
-                alert('Error deleting video: ' + error.message);
-            });
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        alert(`Successfully deleted: ${result.deleted_files.join(', ')}`);
+                        // Redirect back to the main library
+                        window.location.href = '{{ url_for("index") }}';
+                    } else {
+                        alert(`Error: ${result.error}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting video:', error);
+                    alert('Error deleting video: ' + error.message);
+                });
         }
     </script>
 </body>
+
 </html>
