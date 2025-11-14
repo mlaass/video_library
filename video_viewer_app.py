@@ -1210,6 +1210,18 @@ def serve_video(filename):
     return send_file(video_path)
 
 
+@app.route("/serve_face/<path:filename>")
+def serve_face_image(filename):
+    """Serve face crop image from face library"""
+    video_dir = get_video_directory()
+    face_path = os.path.join(video_dir, "face_library", "faces", filename)
+
+    if not os.path.exists(face_path):
+        return "Face image not found", 404
+
+    return send_file(face_path, mimetype="image/jpeg")
+
+
 # Template filters
 @app.template_filter("truncate_text")
 def truncate_text(text, length=100):
@@ -1374,63 +1386,116 @@ def api_combined_processing():
 
 @app.route("/face_library")
 def face_library_page():
-    """Face library management page"""
-    face_lib = FaceLibrary()
-    persons = face_lib.get_all_persons()
+    """Face library management page with SQLite database"""
+    if not FACE_RECOGNITION_ENABLED:
+        return "Face recognition is disabled", 503
 
-    library_info = []
-    for person in persons:
-        library_info.append({"name": person, "encoding_count": face_lib.get_person_count(person)})
+    from face_database import FaceDatabase
 
-    return render_template("face_library.html", persons=library_info)
+    video_dir = get_video_directory()
+    db_path = os.path.join(video_dir, "face_library", "face_library.db")
+
+    with FaceDatabase(db_path) as db:
+        stats = db.get_statistics()
+        filter_type = request.args.get("filter", "all")  # all, labeled, unlabeled
+
+        if filter_type == "labeled":
+            identities = db.get_all_identities(labeled_only=True)
+        elif filter_type == "unlabeled":
+            identities = db.get_all_identities(unlabeled_only=True)
+        else:
+            identities = db.get_all_identities()
+
+    return render_template("face_library.html", identities=identities, stats=stats, filter_type=filter_type)
 
 
-@app.route("/api/face_library", methods=["GET", "POST", "DELETE"])
+@app.route("/api/face_library", methods=["GET", "POST", "DELETE", "PUT"])
 def api_face_library():
-    """Face library management API"""
-    face_lib = FaceLibrary()
+    """Face library management API with SQLite"""
+    if not FACE_RECOGNITION_ENABLED:
+        return jsonify({"error": "Face recognition is disabled"}), 503
+
+    from face_database import FaceDatabase
+
+    video_dir = get_video_directory()
+    db_path = os.path.join(video_dir, "face_library", "face_library.db")
 
     if request.method == "GET":
-        # Get all persons in library
-        persons = face_lib.get_all_persons()
-        library_info = []
-        for person in persons:
-            library_info.append({"name": person, "encoding_count": face_lib.get_person_count(person)})
-        return jsonify({"persons": library_info})
+        # Get all identities or specific identity
+        face_hash = request.args.get("hash")
+        filter_type = request.args.get("filter", "all")
+
+        with FaceDatabase(db_path) as db:
+            if face_hash:
+                # Get specific identity with instances
+                identity = db.get_identity(face_hash)
+                if identity:
+                    instances = db.get_instances_by_hash(face_hash)
+                    return jsonify({"identity": identity, "instances": instances})
+                else:
+                    return jsonify({"error": "Identity not found"}), 404
+            else:
+                # Get all identities
+                if filter_type == "labeled":
+                    identities = db.get_all_identities(labeled_only=True)
+                elif filter_type == "unlabeled":
+                    identities = db.get_all_identities(unlabeled_only=True)
+                else:
+                    identities = db.get_all_identities()
+
+                stats = db.get_statistics()
+                return jsonify({"identities": identities, "stats": stats})
 
     elif request.method == "POST":
         data = request.get_json()
         action = data.get("action")
 
-        if action == "rename":
-            old_name = data.get("old_name")
-            new_name = data.get("new_name")
-            if face_lib.rename_person(old_name, new_name):
-                return jsonify({"success": True, "message": f"Renamed {old_name} to {new_name}"})
+        with FaceDatabase(db_path) as db:
+            if action == "label":
+                # Label a face identity
+                face_hash = data.get("hash")
+                label = data.get("label")
+
+                if db.update_label(face_hash, label):
+                    return jsonify({"success": True, "message": f"Labeled as {label}"})
+                else:
+                    return jsonify({"success": False, "error": "Failed to update label"}), 400
+
+            elif action == "merge":
+                # Merge multiple face identities
+                source_hashes = data.get("source_hashes", [])
+                target_hash = data.get("target_hash")
+                notes = data.get("notes", "")
+
+                if db.merge_faces(source_hashes, target_hash, notes):
+                    return jsonify({"success": True, "message": f"Merged {len(source_hashes)} faces"})
+                else:
+                    return jsonify({"success": False, "error": "Failed to merge faces"}), 400
+
+            elif action == "split":
+                # Split instances from one identity to create new one
+                source_hash = data.get("source_hash")
+                instance_ids = data.get("instance_ids", [])
+                new_label = data.get("new_label")
+
+                new_hash = db.split_face(source_hash, instance_ids, new_label)
+                if new_hash:
+                    return jsonify({"success": True, "new_hash": new_hash, "message": f"Split into new identity"})
+                else:
+                    return jsonify({"success": False, "error": "Failed to split face"}), 400
+
             else:
-                return jsonify({"success": False, "error": "Failed to rename person"}), 400
-
-        elif action == "build_from_photos":
-            # Build library from photos in face_library/photos folder
-            def progress_callback(message, progress):
-                # Could implement WebSocket for real-time updates
-                pass
-
-            results = face_lib.build_from_photos(progress_callback)
-            return jsonify(
-                {"success": True, "message": f"Added {results['added']} face encodings", "errors": results["errors"]}
-            )
-
-        else:
-            return jsonify({"error": "Invalid action"}), 400
+                return jsonify({"error": "Invalid action"}), 400
 
     elif request.method == "DELETE":
         data = request.get_json()
-        person_name = data.get("name")
-        if face_lib.remove_person(person_name):
-            return jsonify({"success": True, "message": f"Removed {person_name} from library"})
-        else:
-            return jsonify({"success": False, "error": "Failed to remove person"}), 400
+        face_hash = data.get("hash")
+
+        with FaceDatabase(db_path) as db:
+            if db.delete_identity(face_hash):
+                return jsonify({"success": True, "message": "Identity deleted"})
+            else:
+                return jsonify({"success": False, "error": "Failed to delete identity"}), 400
 
 
 @app.route("/faces/<path:filename>", methods=["GET", "POST"])
