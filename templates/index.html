@@ -20,6 +20,26 @@
             color: #333;
         }
 
+        .nav-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .nav-links a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border: 1px solid #3498db;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
         .view-controls {
             display: flex;
             justify-content: center;
@@ -370,6 +390,10 @@
     <div class="header">
         <h1>📹 Video Library</h1>
         <p>Found {{ videos|length }} videos</p>
+    </div>
+
+    <div class="nav-links">
+        <a href="/face_library">🎭 Face Library</a>
     </div>
 
     <div class="view-controls">

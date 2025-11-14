@@ -56,6 +56,12 @@
             }
         }
 
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .video-section {
             background: white;
             border-radius: 10px;
@@ -68,7 +74,7 @@
             border-radius: 8px;
         }
 
-        .transcript-section {
+        .transcript-section, .faces-section {
             background: white;
             border-radius: 10px;
             padding: 20px;
@@ -77,13 +83,75 @@
             overflow-y: auto;
         }
 
-        .transcript-header {
+        .faces-section {
+            max-height: 400px;
+        }
+
+        .transcript-header, .faces-header {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 15px;
             color: #2c3e50;
             border-bottom: 2px solid #ecf0f1;
             padding-bottom: 10px;
+        }
+
+        .faces-stats {
+            background: #f0f8ff;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .faces-stats-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2e7d32;
+        }
+
+        .person-tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .face-timestamp {
+            background: #fff3e0;
+            border-left: 3px solid #ff9800;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .face-timestamp:hover {
+            background: #ffe0b2;
+            transform: translateX(2px);
+        }
+
+        .face-time {
+            font-weight: 600;
+            color: #e65100;
+            margin-right: 10px;
+        }
+
+        .face-people {
+            font-size: 13px;
+            color: #424242;
+        }
+
+        .no-faces {
+            text-align: center;
+            color: #757575;
+            font-style: italic;
+            padding: 20px;
         }
 
         .summary {
@@ -567,9 +635,133 @@
                     <source src="{{ url_for('serve_video', filename=video.filename) }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+            </div>
+
+            <div class="sidebar">
+                <div class="faces-section">
+                    <div class="faces-header">
+                        🎭 Face Recognition
+                        {% if video.has_faces %}
+                            <button class="edit-button" onclick="window.open('/face_library', '_blank')" title="Manage Face Library">
+                                👥 Library
+                            </button>
+                        {% endif %}
+                    </div>
+
+                    {% if video.has_faces and video.face_data %}
+                        <div class="faces-stats">
+                            <div class="faces-stats-title">People Found:</div>
+                            {% for person in video.face_data.people_found %}
+                                <span class="person-tag">{{ person }}</span>
+                            {% endfor %}
+                            <div style="margin-top: 8px; font-size: 12px; color: #666;">
+                                {{ video.face_data.total_faces }} face{{ 's' if video.face_data.total_faces != 1 else '' }} detected
+                            </div>
+                        </div>
+
+                        <div class="faces-timeline">
+                            {% for timestamp, people in video.face_data.faces_by_timestamp.items() %}
+                                <div class="face-timestamp" onclick="seekToTime({{ timestamp }})">
+                                    <span class="face-time">{{ '%02d:%02d:%02d' | format((timestamp|float // 3600)|int, ((timestamp|float % 3600) // 60)|int, (timestamp|float % 60)|int) }}</span>
+                                    <span class="face-people">{{ people | join(', ') }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="no-faces">
+                            No face recognition data available.
+                            <br><br>
+                            <button class="edit-button" onclick="startFaceRecognition()" style="margin: 0;">
+                                🔍 Analyze Faces
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="transcript-section">
+                    <div class="transcript-header">
+                        📝 Transcript
+                        {% if video.has_transcript %}
+                        <button class="edit-button" onclick="toggleEditor()">✏️ Edit</button>
+                        {% endif %}
+                    </div>
+
+                    {% if video.summary %}
+                    <div class="summary">
+                        <div class="summary-title">Summary</div>
+                        <div>{{ video.summary }}</div>
+                    </div>
+                    {% endif %}
+
+                    <div class="transcript-view" id="transcriptView">
+                        {% if video.transcript %}
+                        <div class="search-container">
+                            <input type="text" id="searchInput" class="search-input" placeholder="Search transcript..."
+                                autocomplete="off">
+                            <button id="searchClear" class="search-clear">×</button>
+                        </div>
+                        <div id="searchResults" class="search-results"></div>
+
+                        <div class="transcript-content" id="transcriptContent">
+                            {% for line in video.transcript %}
+                            <div class="transcript-line" onclick="seekToTime({{ line.seconds }})"
+                                data-text="{{ line.text|lower }}">
+                                <div class="timestamp">{{ line.timestamp }}</div>
+                                <div class="transcript-text">{{ line.text }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="no-transcript">
+                            No transcript available for this video.
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="editor-container" id="editorContainer">
+                        <div class="editor-instructions">
+                            <h4>📝 Transcript Format Instructions</h4>
+                            <p>The transcript file should follow this markdown format:</p>
+                            <ul>
+                                <li><code># Title</code> - Video title (optional)</li>
+                                <li><code>## Summary</code> - Brief summary (optional)</li>
+                                <li><code>## Transcript</code> - Section header</li>
+                                <li><code>[HH:MM:SS] Text content</code> - Timestamped lines</li>
+                            </ul>
+                            <p><strong>Example:</strong></p>
+                            <code># My Video Title<br>
+## Summary<br>
+This video covers important topics...<br><br>
+## Transcript<br>
+[00:00:05] Welcome to this presentation<br>
+[00:00:12] Today we'll discuss...</code>
+                        </div>
+
+                        <textarea id="transcriptEditor" class="editor-textarea"
+                            placeholder="Enter transcript content..."></textarea>
+
+                        <div class="editor-buttons">
+                            <button class="save-button" onclick="saveTranscript()">💾 Save Changes</button>
+                            <button class="cancel-button" onclick="cancelEdit()">❌ Cancel</button>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="video-controls">
                     <div class="controls-header">🎬 Video Processing</div>
+
+                    <!-- Combined Processing -->
+                    <div class="control-group">
+                        <h4>🚀 Smart Processing</h4>
+                        <div class="control-row">
+                            <button class="control-button" onclick="startCombinedProcessing()">
+                                📝🎭 Transcript + Faces
+                            </button>
+                            <button class="control-button" onclick="startFaceRecognition()">
+                                🎭 Faces Only
+                            </button>
+                        </div>
+                    </div>
 
                     <!-- Trim Controls -->
                     <div class="control-group">
@@ -951,6 +1143,28 @@ This video covers important topics...<br><br>
                 }
             }
         });
+
+        // Face Recognition Functions
+        function startFaceRecognition() {
+            if (!confirm('Start face recognition analysis? This may take several minutes depending on video length.')) {
+                return;
+            }
+
+            startProcessing('face_recognition', {
+                videos: ['{{ video.filename }}']
+            });
+        }
+
+        function startCombinedProcessing() {
+            if (!confirm('Start combined transcript and face recognition processing? This may take several minutes.')) {
+                return;
+            }
+
+            startProcessing('combined_processing', {
+                videos: ['{{ video.filename }}'],
+                force: false
+            });
+        }
 
         // Video Processing Functions
         let currentTaskId = null;

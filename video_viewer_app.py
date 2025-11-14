@@ -17,6 +17,36 @@ from faster_whisper import WhisperModel
 import requests
 from dotenv import load_dotenv
 
+FACE_RECOGNITION_ENABLED = True
+
+try:
+    from face_recognizer import (
+        FaceLibrary,
+        FaceRecognizer,
+        process_video_face_recognition,
+        load_face_recognition_data,
+        save_face_recognition_data,
+    )
+except Exception as e:
+    print(f"Face recognition disabled (import error): {e}")
+    FACE_RECOGNITION_ENABLED = False
+
+    # Provide safe fallbacks so the rest of the app can run
+    FaceLibrary = None
+
+    def process_video_face_recognition(video_path, task_id, processing_status):
+        processing_status[task_id] = {
+            "status": "error",
+            "message": "Face recognition is disabled (missing dependencies)",
+        }
+
+    def load_face_recognition_data(video_path):
+        return None
+
+    def save_face_recognition_data(video_path, face_data):
+        return None
+
+
 app = Flask(__name__)
 
 # Configuration
@@ -93,9 +123,10 @@ def parse_transcript(transcript_path):
 
 
 def get_video_info(video_path, metadata_cache):
-    """Get video information including transcript data if available"""
+    """Get video information including transcript and face recognition data if available"""
     video_name = os.path.splitext(os.path.basename(video_path))[0]
     transcript_path = os.path.join(os.path.dirname(video_path), f"{video_name}_transcript.md")
+    faces_path = os.path.join(os.path.dirname(video_path), f"{video_name}_faces.json")
 
     # Get duration and video date from cache
     duration, video_date = get_cached_metadata(video_path, metadata_cache)
@@ -109,8 +140,10 @@ def get_video_info(video_path, metadata_cache):
         "video_date": video_date,
         "duration": duration,
         "has_transcript": os.path.exists(transcript_path),
+        "has_faces": os.path.exists(faces_path),
     }
 
+    # Load transcript data
     if info["has_transcript"]:
         transcript_data = parse_transcript(transcript_path)
         if transcript_data:
@@ -122,6 +155,16 @@ def get_video_info(video_path, metadata_cache):
             info["title"] = video_name
     else:
         info["title"] = video_name
+
+    # Load face recognition data (if feature is enabled)
+    if FACE_RECOGNITION_ENABLED and info["has_faces"]:
+        face_data = load_face_recognition_data(video_path)
+        if face_data:
+            info["face_data"] = {
+                "people_found": face_data.get("people_found", []),
+                "total_faces": face_data.get("total_faces", 0),
+                "faces_by_timestamp": face_data.get("faces_by_timestamp", {}),
+            }
 
     return info
 
@@ -1225,6 +1268,210 @@ def transcript_editor(filename):
                 f.write(content)
 
             return jsonify({"success": True, "message": "Transcript saved successfully"})
+
+        except Exception as e:
+            return jsonify({"success": False, "error": str(e)})
+
+
+# Face Recognition API Routes
+@app.route("/api/face_recognition", methods=["POST"])
+def api_face_recognition():
+    """Start face recognition for one or more videos"""
+    data = request.get_json()
+    if not data or "videos" not in data:
+        return jsonify({"error": "No videos specified"}), 400
+
+    video_dir = get_video_directory()
+    results = []
+
+    for video_filename in data["videos"]:
+        video_path = os.path.join(video_dir, video_filename)
+        if not os.path.exists(video_path):
+            results.append({"video": video_filename, "error": "Video not found"})
+            continue
+
+        video_name = os.path.splitext(video_filename)[0]
+        faces_path = os.path.join(video_dir, f"{video_name}_faces.json")
+
+        # Check if face recognition already exists
+        force_regenerate = data.get("force", False)
+        if os.path.exists(faces_path) and not force_regenerate:
+            results.append(
+                {"video": video_filename, "status": "exists", "message": "Face recognition data already exists"}
+            )
+            continue
+
+        # Generate unique task ID
+        task_id = f"faces_{video_name}_{int(time.time())}"
+        processing_status[task_id] = {"status": "queued", "progress": 0}
+
+        # Start face recognition in background
+        thread = threading.Thread(target=process_video_face_recognition, args=(video_path, task_id, processing_status))
+        thread.daemon = True
+        thread.start()
+
+        results.append({"video": video_filename, "task_id": task_id, "status": "started"})
+
+    return jsonify({"results": results})
+
+
+@app.route("/api/combined_processing", methods=["POST"])
+def api_combined_processing():
+    """Start both transcript and face recognition processing for videos"""
+    data = request.get_json()
+    if not data or "videos" not in data:
+        return jsonify({"error": "No videos specified"}), 400
+
+    video_dir = get_video_directory()
+    results = []
+
+    for video_filename in data["videos"]:
+        video_path = os.path.join(video_dir, video_filename)
+        if not os.path.exists(video_path):
+            results.append({"video": video_filename, "error": "Video not found"})
+            continue
+
+        video_name = os.path.splitext(video_filename)[0]
+        transcript_path = os.path.join(video_dir, f"{video_name}_transcript.md")
+        faces_path = os.path.join(video_dir, f"{video_name}_faces.json")
+
+        force_regenerate = data.get("force", False)
+        video_result = {"video": video_filename, "tasks": []}
+
+        # Start transcription if needed
+        if not os.path.exists(transcript_path) or force_regenerate:
+            transcript_task_id = f"transcribe_{video_name}_{int(time.time())}"
+            processing_status[transcript_task_id] = {"status": "queued", "progress": 0}
+
+            thread = threading.Thread(
+                target=transcribe_video_file, args=(video_path, transcript_path, transcript_task_id)
+            )
+            thread.daemon = True
+            thread.start()
+
+            video_result["tasks"].append({"type": "transcript", "task_id": transcript_task_id, "status": "started"})
+
+        # Start face recognition if needed
+        if not os.path.exists(faces_path) or force_regenerate:
+            faces_task_id = f"faces_{video_name}_{int(time.time())}"
+            processing_status[faces_task_id] = {"status": "queued", "progress": 0}
+
+            thread = threading.Thread(
+                target=process_video_face_recognition, args=(video_path, faces_task_id, processing_status)
+            )
+            thread.daemon = True
+            thread.start()
+
+            video_result["tasks"].append({"type": "faces", "task_id": faces_task_id, "status": "started"})
+
+        if not video_result["tasks"]:
+            video_result["message"] = "Both transcript and face recognition data already exist"
+
+        results.append(video_result)
+
+    return jsonify({"results": results})
+
+
+@app.route("/face_library")
+def face_library_page():
+    """Face library management page"""
+    face_lib = FaceLibrary()
+    persons = face_lib.get_all_persons()
+
+    library_info = []
+    for person in persons:
+        library_info.append({"name": person, "encoding_count": face_lib.get_person_count(person)})
+
+    return render_template("face_library.html", persons=library_info)
+
+
+@app.route("/api/face_library", methods=["GET", "POST", "DELETE"])
+def api_face_library():
+    """Face library management API"""
+    face_lib = FaceLibrary()
+
+    if request.method == "GET":
+        # Get all persons in library
+        persons = face_lib.get_all_persons()
+        library_info = []
+        for person in persons:
+            library_info.append({"name": person, "encoding_count": face_lib.get_person_count(person)})
+        return jsonify({"persons": library_info})
+
+    elif request.method == "POST":
+        data = request.get_json()
+        action = data.get("action")
+
+        if action == "rename":
+            old_name = data.get("old_name")
+            new_name = data.get("new_name")
+            if face_lib.rename_person(old_name, new_name):
+                return jsonify({"success": True, "message": f"Renamed {old_name} to {new_name}"})
+            else:
+                return jsonify({"success": False, "error": "Failed to rename person"}), 400
+
+        elif action == "build_from_photos":
+            # Build library from photos in face_library/photos folder
+            def progress_callback(message, progress):
+                # Could implement WebSocket for real-time updates
+                pass
+
+            results = face_lib.build_from_photos(progress_callback)
+            return jsonify(
+                {"success": True, "message": f"Added {results['added']} face encodings", "errors": results["errors"]}
+            )
+
+        else:
+            return jsonify({"error": "Invalid action"}), 400
+
+    elif request.method == "DELETE":
+        data = request.get_json()
+        person_name = data.get("name")
+        if face_lib.remove_person(person_name):
+            return jsonify({"success": True, "message": f"Removed {person_name} from library"})
+        else:
+            return jsonify({"success": False, "error": "Failed to remove person"}), 400
+
+
+@app.route("/faces/<path:filename>", methods=["GET", "POST"])
+def face_data_editor(filename):
+    """Handle face recognition data viewing and editing"""
+    video_dir = get_video_directory()
+    video_name = os.path.splitext(filename)[0]
+    faces_path = os.path.join(video_dir, f"{video_name}_faces.json")
+
+    if request.method == "GET":
+        # Load face recognition data
+        if os.path.exists(faces_path):
+            try:
+                with open(faces_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                return content
+            except Exception as e:
+                return f"Error reading face data: {str(e)}", 500
+        else:
+            return jsonify({"error": "Face recognition data not found"}), 404
+
+    elif request.method == "POST":
+        # Save updated face recognition data
+        try:
+            data = request.get_json()
+            if not data or "content" not in data:
+                return jsonify({"success": False, "error": "No content provided"})
+
+            content = data["content"]
+
+            # Validate JSON
+            try:
+                json.loads(content)
+            except json.JSONDecodeError as e:
+                return jsonify({"success": False, "error": f"Invalid JSON: {str(e)}"})
+
+            # Write the face data file
+            with open(faces_path, "w", encoding="utf-8") as f:
+                f.write(content)
+
+            return jsonify({"success": True, "message": "Face data saved successfully"})
 
         except Exception as e:
             return jsonify({"success": False, "error": str(e)})
